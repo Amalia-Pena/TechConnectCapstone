@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.servlet.http.HttpSession;
 
 import com.techelevator.model.User;
-import com.techelevator.model.UserDao;
+import com.techelevator.dao.UserDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ScopedProxyMode;

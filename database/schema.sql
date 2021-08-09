@@ -1,7 +1,7 @@
 BEGIN;
 
 -- CREATE statements go here
-DROP TABLE IF EXISTS app_user,person, employee, classes, person_classes, equipment, assistance_media, workout_profile, gym_session, equipment_usage, workout, goal, person_goals;
+DROP TABLE IF EXISTS app_user,person, employee, exercise_class, class_members, equipment, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
 CREATE TABLE app_user
 (
     user_id   SERIAL PRIMARY KEY,
@@ -40,7 +40,7 @@ CREATE TABLE employee
     FOREIGN KEY (person_id) REFERENCES Person (person_id)
 );
 
-CREATE TABLE classes
+CREATE TABLE exercise_class
 (
     class_id          SERIAL UNIQUE,
     instructor_id     int NOT NULL,
@@ -52,11 +52,11 @@ CREATE TABLE classes
     FOREIGN KEY (instructor_id) REFERENCES Employee (employee_id)
 );
 
-CREATE TABLE person_classes
+CREATE TABLE class_members
 (
     class_id  int NOT NULL,
     person_id int NOT NULL,
-    FOREIGN KEY (class_id) REFERENCES Classes (class_id),
+    FOREIGN KEY (class_id) REFERENCES exercise_class (class_id),
     FOREIGN KEY (person_id) REFERENCES person (person_id)
 );
 
@@ -108,7 +108,7 @@ create table equipment_usage
     FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id)
 );
 
-create table workout
+create table session_equipment
 (
     equipment_usage_id int NOT NULL,
     session_id         int NOT NULL,

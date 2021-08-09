@@ -1,4 +1,4 @@
-package com.techelevator.model;
+package com.techelevator.dao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import com.techelevator.authentication.PasswordHasher;
 
+import com.techelevator.model.User;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,7 +49,7 @@ public class JdbcUserDao implements UserDao {
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
         long newId = jdbcTemplate.queryForObject(
-                "INSERT INTO app_user(user_name, password, salt, role) VALUES (?, ?, ?, ?) RETURNING id", Long.class,
+                "INSERT INTO app_user(user_name, password, salt, role) VALUES (?, ?, ?, ?) RETURNING user_id", Long.class,
                 userName, hashedPassword, saltString, role);
 
         User newUser = new User();
@@ -65,7 +66,7 @@ public class JdbcUserDao implements UserDao {
         String hashedPassword = passwordHasher.computeHash(newPassword, salt);
         String saltString = new String(Base64.encode(salt));
 
-        jdbcTemplate.update("UPDATE app_user SET password=?, salt=? WHERE id=?", hashedPassword, saltString, user.getId());
+        jdbcTemplate.update("UPDATE app_user SET password=?, salt=? WHERE user_id=?", hashedPassword, saltString, user.getId());
     }
 
     /**
@@ -103,7 +104,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
-        String sqlSelectAllUsers = "SELECT id, user_name, role FROM app_user";
+        String sqlSelectAllUsers = "SELECT user_id, user_name, role FROM app_user";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectAllUsers);
 
         while (results.next()) {

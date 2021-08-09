@@ -3,7 +3,7 @@ package com.techelevator.authentication;
 import javax.servlet.http.HttpSession;
 
 import com.techelevator.model.User;
-import com.techelevator.model.UserDao;
+import com.techelevator.dao.UserDao;
 
 import org.junit.Before;
 import org.junit.Test;
