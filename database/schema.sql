@@ -15,7 +15,8 @@ CREATE TABLE person
 (
     person_id  SERIAL UNIQUE,
     user_id    int NOT NULL,
-    name       varchar(255),
+    first_name varchar(255),
+    last_name  varchar(255),
     email      varchar(255),
     photo_path varchar(255),
     PRIMARY KEY (person_id),
@@ -27,7 +28,7 @@ CREATE TABLE workout_profile
     profile_id SERIAL UNIQUE,
     person_id  int NOT NULL,
     weight     varchar(255),
-    height     varchar(255),
+    height     decimal,
     PRIMARY KEY (profile_id),
     FOREIGN KEY (person_id) REFERENCES person (person_id)
 );
@@ -64,7 +65,7 @@ create table equipment
 (
     equipment_id serial NOT NULL UNIQUE,
     name         varchar(255),
-    MET_value    int,
+    MET_value    decimal,
     PRIMARY KEY (equipment_id)
 );
 
@@ -97,6 +98,7 @@ create table equipment_usage
 (
     equipment_usage_id serial UNIQUE,
     equipment_id       int NOT NULL,
+    session_id         int NOT NULL,
     distance           varchar(255),
     incline            boolean,
     decline            boolean,
@@ -105,15 +107,8 @@ create table equipment_usage
     check_in           date,
     check_out          date,
     PRIMARY KEY (equipment_usage_id),
-    FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id)
-);
-
-create table session_equipment
-(
-    equipment_usage_id int NOT NULL,
-    session_id         int NOT NULL,
-    FOREIGN KEY (equipment_usage_id) REFERENCES Equipment_Usage (equipment_usage_id),
-    FOREIGN KEY (session_id) REFERENCES Gym_Session (session_id)
+    FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id),
+    FOREIGN KEY (session_id) REFERENCES gym_session (session_id)
 );
 
 
