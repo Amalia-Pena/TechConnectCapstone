@@ -25,14 +25,6 @@ CREATE TABLE person
     FOREIGN KEY (user_name) REFERENCES app_user (user_name)
 );
 
-CREATE TABLE employee
-(
-    employee_id SERIAL UNIQUE,
-    person_id   int NOT NULL,
-    PRIMARY KEY (employee_id),
-    FOREIGN KEY (person_id) REFERENCES Person (person_id)
-);
-
 CREATE TABLE exercise_class
 (
     class_id          SERIAL UNIQUE,
