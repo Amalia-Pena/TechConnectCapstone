@@ -1,7 +1,7 @@
 BEGIN;
 
 -- CREATE statements go here
-DROP TABLE IF EXISTS app_user,person, employee, exercise_class, class_members, equipment, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
+DROP TABLE IF EXISTS app_user,person, exercise_class, class_members, equipment, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
 CREATE TABLE app_user
 (
     user_id   SERIAL PRIMARY KEY,
@@ -34,7 +34,7 @@ CREATE TABLE exercise_class
     class_start_date  date,
     class_end_date    date,
     PRIMARY KEY (class_id),
-    FOREIGN KEY (instructor_id) REFERENCES Employee (employee_id)
+    FOREIGN KEY (instructor_id) REFERENCES person (person_id)
 );
 
 CREATE TABLE class_members
