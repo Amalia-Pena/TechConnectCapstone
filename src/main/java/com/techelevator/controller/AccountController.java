@@ -1,6 +1,7 @@
 package com.techelevator.controller;
 
 import com.techelevator.authentication.AuthProvider;
+
 import com.techelevator.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,7 @@ import javax.validation.Valid;
  * AccountController
  */
 @Controller
-public class
-AccountController {
+public class AccountController {
     @Autowired
     private AuthProvider auth;
 
@@ -68,8 +68,29 @@ AccountController {
             flash.addFlashAttribute("message", "Please fix the following errors:");
             return "redirect:/register";
         }
-        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getHeight(), user.getWeight(), user.getPhotoPath());
+        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight());
         return "redirect:/";
     }
 
+    //adding employee
+
+    @RequestMapping(path = "/createEmployee", method = RequestMethod.GET)
+    public String showAddEmployeePage(ModelMap modelHolder) {
+        if(!modelHolder.containsAttribute("user")) {
+            modelHolder.put("user", new User());
+        }
+        return "createEmployee";
+    }
+
+    @RequestMapping(path = "/createEmployee", method = RequestMethod.POST)
+    public String addEmployee(@Valid @ModelAttribute("newEmployee") User user, BindingResult result, RedirectAttributes flash) {
+        if (result.hasErrors()) {
+            flash.addFlashAttribute("user", user);
+            flash.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "user", result);
+            flash.addFlashAttribute("message", "Please fix the following errors:");
+            return "redirect:/createEmployee";
+        }
+        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight());
+        return "redirect:/";
+    }
 }

@@ -76,9 +76,9 @@ public class SessionAuthProviderTest {
 
     @Test
     public void registerTest() {
-        sut.register("TEST", "TESTPASS", "TESTROLE");
+        sut.register("TEST", "TESTPASS", "TESTROLE", "TESTFIRSTNAME", "TESTLASTNAME", "TEST@EMAIL.COM", "TESTPHOTOPATH", 65, 123.5);
 
-        verify(mockedDao).saveUser("TEST", "TESTPASS", "TESTROLE");
+        verify(mockedDao).saveUser("TEST", "TESTPASS", "TESTROLE", "TESTFIRSTNAME", "TESTLASTNAME", "TEST@EMAIL.COM", "TESTPHOTOPATH", 65, 123.5);
     }
 
     @Test
