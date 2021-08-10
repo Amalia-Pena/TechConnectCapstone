@@ -14,7 +14,7 @@ CREATE TABLE app_user
 CREATE TABLE person
 (
     person_id  SERIAL UNIQUE,
-    user_id    int NOT NULL,
+    user_name  varchar(32) NOT NULL,
     first_name varchar(255),
     last_name  varchar(255),
     email      varchar(255),
@@ -22,7 +22,7 @@ CREATE TABLE person
     height     decimal,
     weight     decimal,
     PRIMARY KEY (person_id),
-    FOREIGN KEY (user_id) REFERENCES app_user (user_id)
+    FOREIGN KEY (user_name) REFERENCES app_user (user_name)
 );
 
 CREATE TABLE employee
