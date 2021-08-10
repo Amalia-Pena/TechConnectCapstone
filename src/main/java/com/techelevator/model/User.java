@@ -1,14 +1,21 @@
 package com.techelevator.model;
 
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
+
+import java.nio.charset.MalformedInputException;
 
 /**
  * User
  */
 public class User {
+
+
     @NotBlank(message = "Username is required")
     private String username;
 
@@ -21,12 +28,22 @@ public class User {
     private String confirmPassword;
 
     private boolean passwordMatching;
+
+    @NotBlank(message = "First Name is required")
     private String firstName;
+
+    @NotBlank(message = "Last Name is required")
     private String lastName;
+
     @Email(message = "Please enter a valid email address")
     private String email;
+
     private String photoPath;
+
+    @Range(min = (long) 1, max = (long) 120.0, message = "height is required")
     private double height;
+
+    @Range(min = (long) 1, max = (long) 1000, message = "weight is required")
     private double weight;
 
     public User() {

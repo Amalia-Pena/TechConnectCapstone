@@ -2,6 +2,7 @@ package com.techelevator.controller;
 
 import com.techelevator.authentication.AuthProvider;
 
+import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,12 +75,21 @@ public class AccountController {
 
     //adding employee
 
+
     @RequestMapping(path = "/createEmployee", method = RequestMethod.GET)
-    public String showAddEmployeePage(ModelMap modelHolder) {
-        if(!modelHolder.containsAttribute("user")) {
-            modelHolder.put("user", new User());
+    public String showAddEmployeePage(ModelMap modelHolder) throws UnauthorizedException {
+        if (auth.userHasRole(new String[] { "admin" })) {
+            if (!modelHolder.containsAttribute("user")) {
+                modelHolder.put("user", new User());
+            }
+            return "createEmployee";
+
+
         }
-        return "createEmployee";
+        else {
+            throw new UnauthorizedException();
+        }
+
     }
 
     @RequestMapping(path = "/createEmployee", method = RequestMethod.POST)
