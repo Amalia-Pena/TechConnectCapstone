@@ -19,7 +19,8 @@ import javax.validation.Valid;
  * AccountController
  */
 @Controller
-public class AccountController {
+public class
+AccountController {
     @Autowired
     private AuthProvider auth;
 
@@ -67,7 +68,7 @@ public class AccountController {
             flash.addFlashAttribute("message", "Please fix the following errors:");
             return "redirect:/register";
         }
-        auth.register(user.getUsername(), user.getPassword(), user.getRole());
+        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getHeight(), user.getWeight(), user.getPhotoPath());
         return "redirect:/";
     }
 
