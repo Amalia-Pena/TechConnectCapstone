@@ -13,10 +13,10 @@ public interface UserDao {
      *
      * @param userName the user name to give the new user
      * @param password the user's password
-     * @param role the user's role
+     * @param role     the user's role
      * @return the new user
      */
-    public User saveUser(String userName, String password, String role);
+    public User saveUser(String userName, String password, String role, String firstName, String lastName, String email, String photoPath);
 
     public void changePassword(User user, String newPassword);
 
@@ -33,8 +33,13 @@ public interface UserDao {
 
     /**
      * Get all of the users from the database.
+     *
      * @return a List of user objects
      */
     public List<User> getAllUsers();
+
+    public User getUser(String userName);
+
+    public void updateUser(User updatedUser);
 
 }
