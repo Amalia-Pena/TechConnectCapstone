@@ -44,14 +44,14 @@
     </div>
 
     <div class="form-group">
-        <label for ="height">Height</label>
-        <form:input path ="height"/>
+        <label for ="height">Height (inches)</label>
+        <form:input type = "number" step = "0.01" min = "0" max = "120" path ="height"/>
         <form:errors path = "height" cssClass="bg-danger"/>
     </div>
 
     <div class="form-group">
-        <label for ="weight">Weight</label>
-        <form:input path ="weight"/>
+        <label for ="weight">Weight (lbs)</label>
+        <form:input type = "number" step = "0.01" min = "0"  path ="weight"/>
         <form:errors path = "weight" cssClass="bg-danger"/>
     </div>
 

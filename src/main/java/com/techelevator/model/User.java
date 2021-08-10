@@ -2,6 +2,7 @@ package com.techelevator.model;
 
 import javax.validation.constraints.AssertTrue;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -22,6 +23,7 @@ public class User {
     private boolean passwordMatching;
     private String firstName;
     private String lastName;
+    @Email(message = "Please enter a valid email address")
     private String email;
     private String photoPath;
     private double height;
