@@ -48,27 +48,16 @@
         <form:input class="form-control" path="photoPath"/>
         <form:errors path="photoPath" cssClass="bg-danger"/>
     </div>
-    <fieldset>
+    <fieldset style="display:none">
         <legend>Role</legend>
-        <form:errors path="role" cssClass="bg-danger"/>
-        <div class="radio">
+        <form:errors path="role"/>
+        <div id ="roleSelection">
             <label>
                 <form:radiobutton path="role" value="user" checked="checked"/>
                 User
             </label>
         </div>
-        <div class="radio">
-            <label>
-                <form:radiobutton path="role" value="admin"/>
-                Administrator
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <form:radiobutton path="role" value="editor"/>
-                Editor
-            </label>
-        </div>
+
     </fieldset>
     <button type="submit" class="btn btn-default">Save User</button>
 </form:form>
