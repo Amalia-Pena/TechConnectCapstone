@@ -19,18 +19,10 @@ CREATE TABLE person
     last_name  varchar(255),
     email      varchar(255),
     photo_path varchar(255),
+    height     decimal,
+    weight     decimal,
     PRIMARY KEY (person_id),
     FOREIGN KEY (user_id) REFERENCES app_user (user_id)
-);
-
-CREATE TABLE workout_profile
-(
-    profile_id SERIAL UNIQUE,
-    person_id  int NOT NULL,
-    weight     varchar(255),
-    height     decimal,
-    PRIMARY KEY (profile_id),
-    FOREIGN KEY (person_id) REFERENCES person (person_id)
 );
 
 CREATE TABLE employee
@@ -88,11 +80,11 @@ CREATE TABLE assistance_media
 create table gym_session
 (
     session_id serial UNIQUE,
-    profile_id int  NOT NULL,
+    person_id  int  NOT NULL,
     check_in   date NOT NULL,
     check_out  date NOT NULL,
     PRIMARY KEY (session_id),
-    FOREIGN KEY (profile_id) REFERENCES Workout_Profile (profile_id)
+    FOREIGN KEY (person_id) REFERENCES person (person_id)
 );
 create table equipment_usage
 (
