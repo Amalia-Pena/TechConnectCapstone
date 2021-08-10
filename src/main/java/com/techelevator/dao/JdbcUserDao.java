@@ -44,13 +44,13 @@ public class JdbcUserDao implements UserDao {
      * @return the new user
      */
     @Override
-    public User saveUser(String userName, String password, String role, String firstName, String lastName, String email, String photoPath) {
+    public User saveUser(String userName, String password, String role, String firstName, String lastName, String email, String photoPath, double height, double weight) {
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
         long newId = jdbcTemplate.queryForObject(
-                "INSERT INTO app_user(user_name, password, salt, role, first_name, last_name, email, photo_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING user_id", Long.class,
-                userName, hashedPassword, saltString, role, firstName, lastName, email, photoPath);
+                "INSERT INTO app_user(user_name, password, salt, role, first_name, last_name, email, photo_path, height, weight ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING user_id", Long.class,
+                userName, hashedPassword, saltString, role, firstName, lastName, email, photoPath, height, weight);
 
         User newUser = new User();
         newUser.setId(newId);
@@ -110,7 +110,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
-        String sqlSelectAllUsers = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path FROM app_user";
+        String sqlSelectAllUsers = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path, height, weight FROM app_user";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectAllUsers);
 
         while (results.next()) {
@@ -124,7 +124,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public User getUser(String userName) {
         User user = new User();
-        String sqlSelectUser = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path FROM app_user WHERE user_name = UPPER(?);";
+        String sqlSelectUser = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path, height, weight FROM app_user WHERE user_name = UPPER(?);";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectUser);
 
         while (results.next()) {
@@ -136,7 +136,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public void updateUser(User updatedUser) {
         String sqlUpdateUser = "UPDATE app_user SET first_name = ?, last_name = ?, email = ?, photo_path = ? WHERE user_name = ?;";
-        jdbcTemplate.update(sqlUpdateUser, updatedUser.getFirstName(), updatedUser.getLastName(), updatedUser.getEmail(), updatedUser.getPhotoPath(), updatedUser.getUsername());
+        jdbcTemplate.update(sqlUpdateUser, updatedUser.getFirstName(), updatedUser.getLastName(), updatedUser.getEmail(), updatedUser.getPhotoPath(), updatedUser.getUsername(), updatedUser.getHeight(), updatedUser.getWeight());
     }
 
     private User mapResultToUser(SqlRowSet results) {
@@ -148,6 +148,8 @@ public class JdbcUserDao implements UserDao {
         user.setLastName(results.getString("last_name"));
         user.setEmail(results.getString("email"));
         user.setPhotoPath(results.getString("photo_path"));
+        user.setHeight(results.getDouble("height"));
+        user.setWeight(results.getLong("weight"));
         return user;
     }
 

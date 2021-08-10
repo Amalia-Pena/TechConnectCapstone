@@ -24,6 +24,8 @@ public class User {
     private String lastName;
     private String email;
     private String photoPath;
+    private double height;
+    private double weight;
 
     public User() {
     }
@@ -90,6 +92,14 @@ public class User {
         return role;
     }
 
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
     /**
      * @param id the id to set
      */
@@ -134,5 +144,13 @@ public class User {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 }
