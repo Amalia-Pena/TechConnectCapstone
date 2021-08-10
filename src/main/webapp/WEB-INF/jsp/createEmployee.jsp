@@ -26,7 +26,7 @@
     </div>
 
     <div class="form-group">
-        <label for ="last_name">Last Name</label>
+        <label for ="lastName">Last Name</label>
         <form:input path ="lastName"/>
         <form:errors path = "lastName" cssClass="bg-danger"/>
     </div>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="form-group">
-        <label for ="photo_path">Photo Path</label>
+        <label for ="photoPath">Photo Path</label>
         <form:input path ="photoPath"/>
         <form:errors path = "photoPath" cssClass="bg-danger"/>
     </div>

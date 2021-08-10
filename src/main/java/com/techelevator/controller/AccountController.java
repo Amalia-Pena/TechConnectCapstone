@@ -1,7 +1,7 @@
 package com.techelevator.controller;
 
 import com.techelevator.authentication.AuthProvider;
-import com.techelevator.model.Person;
+
 import com.techelevator.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -90,7 +90,7 @@ public class AccountController {
             flash.addFlashAttribute("message", "Please fix the following errors:");
             return "redirect:/createEmployee";
         }
-        auth.register(user.getUsername(), user.getPassword(), user.getRole()); //add added fields here such as first_name, last_name, etc.
+        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath());
         return "redirect:/";
     }
 }
