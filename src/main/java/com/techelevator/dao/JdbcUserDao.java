@@ -60,6 +60,8 @@ public class JdbcUserDao implements UserDao {
         return newUser;
     }
 
+
+
     @Override
     public void changePassword(User user, String newPassword) {
         byte[] salt = passwordHasher.generateRandomSalt();

@@ -1,6 +1,7 @@
 package com.techelevator.controller;
 
 import com.techelevator.authentication.AuthProvider;
+import com.techelevator.model.Person;
 import com.techelevator.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -71,4 +72,25 @@ public class AccountController {
         return "redirect:/";
     }
 
+    //adding employee
+
+    @RequestMapping(path = "/createEmployee", method = RequestMethod.GET)
+    public String showAddEmployeePage(ModelMap modelHolder) {
+        if(!modelHolder.containsAttribute("user")) {
+            modelHolder.put("user", new User());
+        }
+        return "createEmployee";
+    }
+
+    @RequestMapping(path = "/createEmployee", method = RequestMethod.POST)
+    public String addEmployee(@Valid @ModelAttribute("newEmployee") User user, BindingResult result, RedirectAttributes flash) {
+        if (result.hasErrors()) {
+            flash.addFlashAttribute("user", user);
+            flash.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "user", result);
+            flash.addFlashAttribute("message", "Please fix the following errors:");
+            return "redirect:/createEmployee";
+        }
+        auth.register(user.getUsername(), user.getPassword(), user.getRole()); //add added fields here such as first_name, last_name, etc.
+        return "redirect:/";
+    }
 }
