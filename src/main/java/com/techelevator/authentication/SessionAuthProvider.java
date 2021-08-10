@@ -73,8 +73,8 @@ public class SessionAuthProvider implements AuthProvider {
     }
 
     @Override
-    public void register(String username, String password, String role) {
-        dao.saveUser(username, password, role);
+    public void register(String username, String password, String role, String firstName, String lastName, String email, String photoPath) {
+        dao.saveUser(username, password, role, firstName, lastName, email, photoPath);
     }
 
     @Override
