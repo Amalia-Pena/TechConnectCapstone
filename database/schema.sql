@@ -4,25 +4,17 @@ BEGIN;
 DROP TABLE IF EXISTS app_user,person, employee, exercise_class, class_members, equipment, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
 CREATE TABLE app_user
 (
-    user_id   SERIAL PRIMARY KEY,
-    user_name varchar(32)  NOT NULL UNIQUE,
-    password  varchar(32)  NOT NULL,
-    role      varchar(32),
-    salt      varchar(255) NOT NULL
-);
-
-CREATE TABLE person
-(
-    person_id  SERIAL UNIQUE,
-    user_name  varchar(32) NOT NULL,
+    user_id    SERIAL PRIMARY KEY,
+    user_name  varchar(32)  NOT NULL UNIQUE,
+    password   varchar(32)  NOT NULL,
+    role       varchar(32),
+    salt       varchar(255) NOT NULL,
     first_name varchar(255),
     last_name  varchar(255),
     email      varchar(255),
     photo_path varchar(255),
     height     decimal,
-    weight     decimal,
-    PRIMARY KEY (person_id),
-    FOREIGN KEY (user_name) REFERENCES app_user (user_name)
+    weight     decimal
 );
 
 CREATE TABLE exercise_class
@@ -34,15 +26,15 @@ CREATE TABLE exercise_class
     class_start_date  date,
     class_end_date    date,
     PRIMARY KEY (class_id),
-    FOREIGN KEY (instructor_id) REFERENCES Employee (employee_id)
+    FOREIGN KEY (instructor_id) REFERENCES app_user (user_id)
 );
 
 CREATE TABLE class_members
 (
-    class_id  int NOT NULL,
-    person_id int NOT NULL,
+    class_id int NOT NULL,
+    user_id  int NOT NULL,
     FOREIGN KEY (class_id) REFERENCES exercise_class (class_id),
-    FOREIGN KEY (person_id) REFERENCES person (person_id)
+    FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
 
 create table equipment
@@ -72,11 +64,11 @@ CREATE TABLE assistance_media
 create table gym_session
 (
     session_id serial UNIQUE,
-    person_id  int  NOT NULL,
+    user_id    int  NOT NULL,
     check_in   date NOT NULL,
     check_out  date NOT NULL,
     PRIMARY KEY (session_id),
-    FOREIGN KEY (person_id) REFERENCES person (person_id)
+    FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
 create table equipment_usage
 (
@@ -100,20 +92,20 @@ create table equipment_usage
 CREATE TABLE goal
 (
     goal_id     SERIAL UNIQUE,
-    person_id   int NOT NULL,
+    user_id     int NOT NULL,
     description varchar(255),
     PRIMARY KEY (goal_id),
-    FOREIGN KEY (person_id) REFERENCES person (person_id)
+    FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
 
 
 
 CREATE TABLE person_goals
 (
-    goal_id   int NOT NULL,
-    person_id int NOT NULL,
+    goal_id int NOT NULL,
+    user_id int NOT NULL,
     FOREIGN KEY (goal_id) REFERENCES goal (goal_id),
-    FOREIGN KEY (person_id) REFERENCES person (person_id)
+    FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
 
 COMMIT;
