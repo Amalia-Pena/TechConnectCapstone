@@ -3,6 +3,8 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 
 import com.techelevator.authentication.UnauthorizedException;
+import com.techelevator.dao.JdbcSessionDao;
+import com.techelevator.dao.SessionDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.User;
 import org.apache.commons.io.FileUtils;
@@ -34,7 +36,10 @@ import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
 public class AccountController {
     @Autowired
     private AuthProvider auth;
+    @Autowired
     private UserDao userDao;
+    @Autowired
+    private SessionDao sessionDao;
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
     public String index(ModelMap modelHolder) {
@@ -81,7 +86,7 @@ public class AccountController {
             return "redirect:/register";
         }
 
-        if(photoPathContainer.isEmpty()) {
+        if (photoPathContainer.isEmpty()) {
             user.setPhotoPath(null);
         } else {
             user.setPhotoPath(photoPathContainer.getBytes());
@@ -95,15 +100,14 @@ public class AccountController {
 
     @RequestMapping(path = "/createEmployee", method = RequestMethod.GET)
     public String showAddEmployeePage(ModelMap modelHolder) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin" })) {
+        if (auth.userHasRole(new String[]{"admin"})) {
             if (!modelHolder.containsAttribute("user")) {
                 modelHolder.put("user", new User());
             }
             return "createEmployee";
 
 
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
 
@@ -145,5 +149,20 @@ public class AccountController {
             media = FileUtils.readFileToByteArray(ResourceUtils.getFile("classpath:../../img/150.png"));
         }
         return new ResponseEntity<>(media, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/gymSession", method = RequestMethod.GET)
+    public String showGymSession(ModelMap map) {
+        if (!map.containsAttribute("user")) {
+            map.put("user", new User());
+        }
+        map.put("user", auth.getCurrentUser());
+        sessionDao.checkIn(auth.getCurrentUser().getId());
+        return "index";
+    }
+    @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
+    public String showGymSessionCheckOut(ModelMap map) {
+        sessionDao.checkOut(auth.getCurrentUser().getId());
+        return "redirect:/";
     }
 }

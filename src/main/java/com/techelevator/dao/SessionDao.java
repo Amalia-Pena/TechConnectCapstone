@@ -7,6 +7,6 @@ import java.util.List;
 @Component
 public interface SessionDao {
 
-    public List<gymSession> getGymSessionData(String username);
-
+    public void checkIn(Long user_id);
+    public void checkOut(Long user_id);
 }

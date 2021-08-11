@@ -65,8 +65,8 @@ create table gym_session
 (
     session_id serial UNIQUE,
     user_id    int  NOT NULL,
-    check_in   date NOT NULL,
-    check_out  date NOT NULL,
+    check_in   timestamp NOT NULL,
+    check_out  timestamp NOT NULL,
     PRIMARY KEY (session_id),
     FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
@@ -80,8 +80,8 @@ create table equipment_usage
     decline            boolean,
     reps               int,
     weight_per_rep     int,
-    check_in           date,
-    check_out          date,
+    check_in           timestamp,
+    check_out          timestamp,
     PRIMARY KEY (equipment_usage_id),
     FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id),
     FOREIGN KEY (session_id) REFERENCES gym_session (session_id)
