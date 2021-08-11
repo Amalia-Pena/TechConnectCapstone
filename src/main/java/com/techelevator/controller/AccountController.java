@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+
+import java.io.IOException;
+
+import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
 
 
 /**
@@ -61,13 +66,19 @@ public class AccountController {
         return "register";
     }
 
-    @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public String register(@Valid @ModelAttribute("user") User user, BindingResult result, RedirectAttributes flash) {
+    @RequestMapping(path = "/register", method = RequestMethod.POST, consumes = {MULTIPART_FORM_DATA_VALUE})
+    public String register(@Valid @ModelAttribute("user") User user, BindingResult result, @RequestParam("photoPathContainer") MultipartFile photoPathContainer, RedirectAttributes flash) throws IOException {
         if (result.hasErrors()) {
             flash.addFlashAttribute("user", user);
             flash.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "user", result);
             flash.addFlashAttribute("message", "Please fix the following errors:");
             return "redirect:/register";
+        }
+
+        if(photoPathContainer.isEmpty()) {
+            user.setPhotoPath(null);
+        } else {
+            user.setPhotoPath(photoPathContainer.getBytes());
         }
         auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight());
         return "redirect:/";

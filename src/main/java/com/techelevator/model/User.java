@@ -7,6 +7,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.MalformedInputException;
 
@@ -38,7 +39,10 @@ public class User {
     @Email(message = "Please enter a valid email address")
     private String email;
 
-    private String photoPath;
+    //Added for adding photo to DB
+    private byte[] photoPath;
+
+
 
     @Range(min = (long) 1, max = (long) 120.0, message = "height is required")
     private double height;
@@ -49,12 +53,20 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String firstName, String lastName, String email, String photoPath) {
+    public User(String userName, String firstName, String lastName, String email, byte[] photoPath) {
         this.username = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.photoPath = photoPath;
+    }
+
+  //  public MultipartFile getPhotoPathContainer() {
+   //     return getPhotoPathContainer;
+  //  }
+
+    public void setPhotoPathContainer(MultipartFile photoPathContainer) {
+
     }
 
 
@@ -100,7 +112,7 @@ public class User {
         return email;
     }
 
-    public String getPhotoPath() {
+    public byte[] getPhotoPath() {
         return photoPath;
     }
 
@@ -161,7 +173,7 @@ public class User {
         this.email = email;
     }
 
-    public void setPhotoPath(String photoPath) {
+    public void setPhotoPath(byte[] photoPath) {
         this.photoPath = photoPath;
     }
 

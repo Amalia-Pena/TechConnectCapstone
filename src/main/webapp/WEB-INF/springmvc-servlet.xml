@@ -25,6 +25,12 @@
 
 	<mvc:annotation-driven />
 
+
+	<!--Added for storing image to DB -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="268435456"/>
+	</bean>
+
 	<!-- This view resolver contains logic for translating a logical view name 
 		(e.g. "homePage") into a JSP file path (e.g. "/WEB-INF/jsp/homePage.jsp") -->
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
