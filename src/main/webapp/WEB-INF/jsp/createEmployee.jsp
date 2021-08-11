@@ -3,7 +3,7 @@
 
 <c:url var="addEmployeeUrl" value="/createEmployee"/>
 <h1>Create Employee</h1>
-<form:form action="${addEmployeeUrl}" method="POST" modelAttribute="user">
+<form:form action="${addEmployeeUrl}" method="POST" modelAttribute="user" enctype="multipart/form-data">
     <div class="form-group">
         <label for="username">Username</label>
         <form:input class="form-control" path="username" placeholder="Username"/>
