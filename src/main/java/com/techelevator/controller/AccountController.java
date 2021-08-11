@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.awt.image.BufferedImage;
@@ -35,6 +36,7 @@ public class AccountController {
     @Autowired
     private AuthProvider auth;
     private UserDao userDao;
+
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
     public String index(ModelMap modelHolder) {
@@ -146,4 +148,21 @@ public class AccountController {
         }
         return new ResponseEntity<>(media, headers, HttpStatus.OK);
     }
+
+
+    //View for Exercise Classes:
+    @Autowired
+    private ExerciseClassDao exerciseClassDao;
+
+
+    //View for Exercise Classes:
+    @RequestMapping(path ="/exerciseClasses", method = RequestMethod.GET)
+    public String viewExerciseClasses(HttpServletRequest request) {
+        request.setAttribute("exerciseClass", exerciseClassDao.getAllClasses());
+        request.setAttribute("sourceUrl", "exerciseClass");
+        return "exerciseClass";
+    }
+
+
+
 }
