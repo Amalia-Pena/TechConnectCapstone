@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 
 import com.techelevator.authentication.UnauthorizedException;
+import com.techelevator.dao.ExerciseClassDao;
 import com.techelevator.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.io.IOException;
@@ -29,6 +31,7 @@ import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
 public class AccountController {
     @Autowired
     private AuthProvider auth;
+
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
     public String index(ModelMap modelHolder) {
@@ -114,4 +117,21 @@ public class AccountController {
         auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight());
         return "redirect:/";
     }
+
+
+    //View for Exercise Classes:
+    @Autowired
+    private ExerciseClassDao exerciseClassDao;
+
+
+    //View for Exercise Classes:
+    @RequestMapping(path ="/exerciseClasses", method = RequestMethod.GET)
+    public String viewExerciseClasses(HttpServletRequest request) {
+        request.setAttribute("exerciseClass", exerciseClassDao.getAllClasses());
+        request.setAttribute("sourceUrl", "exerciseClass");
+        return "exerciseClass";
+    }
+
+
+
 }
