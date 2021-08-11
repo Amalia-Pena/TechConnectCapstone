@@ -90,7 +90,7 @@ public class JdbcUserDao implements UserDao {
      */
     @Override
     public User getValidUserWithPassword(String userName, String password) {
-        String sqlSearchForUser = "SELECT user_id, user_name, password, role, salt, first_name, last_name, email, height, weight FROM app_user WHERE UPPER(user_name) = ?";
+        String sqlSearchForUser = "SELECT user_id, user_name, password, role, salt, first_name, last_name, email, photo_path, height, weight FROM app_user WHERE UPPER(user_name) = ?";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSearchForUser, userName.toUpperCase());
         if (results.next()) {
@@ -105,6 +105,7 @@ public class JdbcUserDao implements UserDao {
         } else {
             return null;
         }
+
     }
 
     /**

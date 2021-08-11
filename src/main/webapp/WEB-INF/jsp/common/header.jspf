@@ -36,6 +36,10 @@
                         <c:url var="addEmployeeUrl" value="/createEmployee"/>
                         <li><a href="${addEmployeeUrl}">Add Employee</a></li>
                     </c:if>
+                    <c:if test="${appCurrentUser.role == 'user'|| appCurrentUser.role == 'admin'}">
+                        <c:url var="viewProfile" value="/profile"/>
+                        <li><a href="${viewProfile}">View Profile</a></li>
+                    </c:if>
                 </c:if>
             </ul>
             <ul class="nav navbar-nav navbar-right">
