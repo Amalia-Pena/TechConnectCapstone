@@ -1,5 +1,7 @@
 package com.techelevator.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,9 @@ import com.techelevator.authentication.PasswordHasher;
 import com.techelevator.model.User;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +48,7 @@ public class JdbcUserDao implements UserDao {
      * @return the new user
      */
     @Override
-    public User saveUser(String userName, String password, String role, String firstName, String lastName, String email, String photoPath, double height, double weight) {
+    public User saveUser(String userName, String password, String role, String firstName, String lastName, String email, byte[] photoPath, double height, double weight) {
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
@@ -86,7 +90,7 @@ public class JdbcUserDao implements UserDao {
      */
     @Override
     public User getValidUserWithPassword(String userName, String password) {
-        String sqlSearchForUser = "SELECT * FROM app_user WHERE UPPER(user_name) = ?";
+        String sqlSearchForUser = "SELECT user_id, user_name, password, role, salt, first_name, last_name, email, height, weight FROM app_user WHERE UPPER(user_name) = ?";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSearchForUser, userName.toUpperCase());
         if (results.next()) {
@@ -109,34 +113,51 @@ public class JdbcUserDao implements UserDao {
      */
     @Override
     public List<User> getAllUsers() {
-        List<User> users = new ArrayList<User>();
+
         String sqlSelectAllUsers = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path, height, weight FROM app_user";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectAllUsers);
+        return jdbcTemplate.query(sqlSelectAllUsers, new UserRowMapper());
 
-        while (results.next()) {
-            User user = mapResultToUser(results);
-            users.add(user);
-        }
-
-        return users;
     }
 
     @Override
     public User getUser(String userName) {
-        User user = new User();
         String sqlSelectUser = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path, height, weight FROM app_user WHERE user_name = UPPER(?);";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectUser);
 
-        while (results.next()) {
-            user = mapResultToUser(results);
+        try {
+            return jdbcTemplate.queryForObject(sqlSelectUser, new UserRowMapper(), userName);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
-        return user;
+
     }
 
     @Override
     public void updateUser(User updatedUser) {
         String sqlUpdateUser = "UPDATE app_user SET first_name = ?, last_name = ?, email = ?, photo_path = ? WHERE user_name = ?;";
         jdbcTemplate.update(sqlUpdateUser, updatedUser.getFirstName(), updatedUser.getLastName(), updatedUser.getEmail(), updatedUser.getPhotoPath(), updatedUser.getUsername(), updatedUser.getHeight(), updatedUser.getWeight());
+    }
+
+
+    class UserRowMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet results, int i) {
+            User user = new User();
+            try {
+                user.setId(results.getLong("user_id"));
+                user.setUsername(results.getString("user_name"));
+                user.setRole(results.getString("role"));
+                user.setFirstName(results.getString("first_name"));
+                user.setLastName(results.getString("last_name"));
+                user.setEmail(results.getString("email"));
+                user.setPhotoPath(results.getBytes("photo_path"));
+                user.setHeight(results.getDouble("height"));
+                user.setWeight(results.getLong("weight"));
+                return user;
+            }
+            catch (SQLException e){
+                return null;
+            }
+        }
     }
 
     private User mapResultToUser(SqlRowSet results) {
@@ -147,10 +168,10 @@ public class JdbcUserDao implements UserDao {
         user.setFirstName(results.getString("first_name"));
         user.setLastName(results.getString("last_name"));
         user.setEmail(results.getString("email"));
-        user.setPhotoPath(results.getString("photo_path"));
         user.setHeight(results.getDouble("height"));
         user.setWeight(results.getLong("weight"));
         return user;
     }
+
 
 }

@@ -2,7 +2,7 @@
 <%@ include file = "common/header.jspf" %>
 
 <c:url var="registerUrl" value="/register"/>
-<form:form action="${registerUrl}" method="POST" modelAttribute="user">
+<form:form action="${registerUrl}" method="POST" modelAttribute="user" enctype="multipart/form-data">
     <div class="form-group">
         <label for="username">Username</label>
         <form:input class="form-control" path="username" placeholder="Username"/>
@@ -44,9 +44,10 @@
         <form:errors path="weight" cssClass="bg-danger"/>
     </div>
     <div class="form-group">
-        <label for="photoPath">Photo</label>
-        <form:input class="form-control" path="photoPath"/>
-        <form:errors path="photoPath" cssClass="bg-danger"/>
+        <label for="photoPathContainer">Photo</label>
+        <!--Added for adding image to DB -->
+        <input type="file" class="form-control" id="photoPathContainer" name="photoPathContainer" value=""/>
+
     </div>
     <fieldset style="display:none">
         <legend>Role</legend>
