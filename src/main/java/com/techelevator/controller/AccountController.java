@@ -127,7 +127,7 @@ public class AccountController {
             if (!modelHolder.containsAttribute("user")) {
                 modelHolder.put("user", new User());
             }
-            modelHolder.put("user", auth.getCurrentUser());
+            modelHolder.put("user", userDao.getUser(auth.getCurrentUser().getUsername()));
             return "profile";
         } else {
             throw new UnauthorizedException();
@@ -140,7 +140,7 @@ public class AccountController {
         BufferedImage img;
         headers.setContentType(MediaType.IMAGE_PNG);
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        byte[] media = auth.getCurrentUser().getPhotoPath();
+        byte[] media = userDao.getUser(auth.getCurrentUser().getUsername()).getPhotoPath();
         if (media == null) {
             media = FileUtils.readFileToByteArray(ResourceUtils.getFile("classpath:../../img/150.png"));
         }
