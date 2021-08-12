@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 
 import com.techelevator.authentication.UnauthorizedException;
+import com.techelevator.dao.ExerciseClassDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.User;
 import org.apache.commons.io.FileUtils;
@@ -35,7 +36,11 @@ import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
 public class AccountController {
     @Autowired
     private AuthProvider auth;
+    @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private ExerciseClassDao exerciseClassDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -151,8 +156,7 @@ public class AccountController {
 
 
     //View for Exercise Classes:
-    @Autowired
-    private ExerciseClassDao exerciseClassDao;
+
 
 
     //View for Exercise Classes:
