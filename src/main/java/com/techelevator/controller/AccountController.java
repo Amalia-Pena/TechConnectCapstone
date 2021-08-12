@@ -5,6 +5,7 @@ import com.techelevator.authentication.AuthProvider;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.dao.JdbcSessionDao;
 import com.techelevator.dao.SessionDao;
+import com.techelevator.dao.ExerciseClassDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.User;
 import org.apache.commons.io.FileUtils;
@@ -41,6 +42,9 @@ public class AccountController {
     private UserDao userDao;
     @Autowired
     private SessionDao sessionDao;
+
+    @Autowired
+    private ExerciseClassDao exerciseClassDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -170,8 +174,7 @@ public class AccountController {
 
 
     //View for Exercise Classes:
-    @Autowired
-    private ExerciseClassDao exerciseClassDao;
+
 
 
     //View for Exercise Classes:
