@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.awt.image.BufferedImage;
@@ -56,7 +57,8 @@ public class AccountController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(@RequestParam String username, @RequestParam String password, RedirectAttributes flash) {
         if (auth.signIn(username, password)) {
-            return "redirect:profile";
+            auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+            return "redirect:home";
         } else {
             flash.addFlashAttribute("message", "Login Invalid");
             return "redirect:/login";
@@ -159,16 +161,35 @@ public class AccountController {
             }
             map.put("user", auth.getCurrentUser());
             sessionDao.checkIn(auth.getCurrentUser().getId());
-            return "index";
+            auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+            return "loggedInHome";
         } else {
             throw new UnauthorizedException();
         }
     }
 
+
         @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
-        public String showGymSessionCheckOut(ModelMap map){
+        public String showGymSessionCheckOut (ModelMap map){
             sessionDao.checkOut(auth.getCurrentUser().getId());
-            return "redirect:/";
+            auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+            return "redirect:home";
+        }
+
+        @RequestMapping(path = "/home", method = RequestMethod.GET)
+        public String showLogInHomePage(ModelMap modelHolder, HttpSession session) throws UnauthorizedException {
+            if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+                if (!modelHolder.containsAttribute("user")) {
+                    modelHolder.put("user", new User());
+                }
+                return "loggedInHome";
+            } else {
+                throw new UnauthorizedException();
+            }
         }
     }
+
+
+
+
 

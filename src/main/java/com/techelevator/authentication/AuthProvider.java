@@ -2,13 +2,15 @@ package com.techelevator.authentication;
 
 import com.techelevator.model.User;
 
+import javax.servlet.http.HttpSession;
+
 public interface AuthProvider {
     /**
      * Returns true if a current user is logged in.
      * @return true if user is logged in
      */
     boolean isLoggedIn();
-
+    HttpSession getSession();
     /**
      * Returns the currently signed in user.
      * @return the currently signed in user
