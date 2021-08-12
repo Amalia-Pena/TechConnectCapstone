@@ -22,7 +22,7 @@
                 <span class="icon-bar"></span>
             </button>
             <c:url var="homeUrl" value="/"/>
-            <a href="${homeUrl}" class="navbar-brand">Home</a>
+            <a href="${homeUrl}" class="navbar-brand"><img src="${pageContext.request.contextPath}/siteImages/logo.png" alt="logo-image" style="width: 50px;"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
