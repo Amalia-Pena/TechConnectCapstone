@@ -152,17 +152,23 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/gymSession", method = RequestMethod.GET)
-    public String showGymSession(ModelMap map) {
-        if (!map.containsAttribute("user")) {
-            map.put("user", new User());
+    public String showGymSession(ModelMap map) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            if (!map.containsAttribute("user")) {
+                map.put("user", new User());
+            }
+            map.put("user", auth.getCurrentUser());
+            sessionDao.checkIn(auth.getCurrentUser().getId());
+            return "index";
+        } else {
+            throw new UnauthorizedException();
         }
-        map.put("user", auth.getCurrentUser());
-        sessionDao.checkIn(auth.getCurrentUser().getId());
-        return "index";
     }
-    @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
-    public String showGymSessionCheckOut(ModelMap map) {
-        sessionDao.checkOut(auth.getCurrentUser().getId());
-        return "redirect:/";
+
+        @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
+        public String showGymSessionCheckOut(ModelMap map){
+            sessionDao.checkOut(auth.getCurrentUser().getId());
+            return "redirect:/";
+        }
     }
-}
+
