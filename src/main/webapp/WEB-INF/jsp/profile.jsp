@@ -9,5 +9,10 @@
 <li>Last Name: ${user.lastName}</li>
 <li>Email: ${user.email}</li>
 
+<c:url var="editProfileUrl" value="/editProfile"/>
+<form:form action="${editProfileUrl}" method="GET" modelAttribute="user">
+    <button type="submit" class="btn btn-default">Edit Profile</button>
+</form:form>
+
 
 <%@ include file="common/footer.jspf" %>

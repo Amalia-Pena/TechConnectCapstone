@@ -43,7 +43,6 @@ public class User {
     private byte[] photoPath;
 
 
-
     @Range(min = (long) 1, max = (long) 120.0, message = "height is required")
     private double height;
 
@@ -51,6 +50,15 @@ public class User {
     private double weight;
 
     public User() {
+    }
+
+    public User(String firstName, String lastName, String email, double height, double weight, byte[] photoPath) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.height = height;
+        this.weight = weight;
+        this.photoPath = photoPath;
     }
 
     public User(String userName, String firstName, String lastName, String email, byte[] photoPath) {
@@ -61,7 +69,7 @@ public class User {
         this.photoPath = photoPath;
     }
 
-  //  public MultipartFile getPhotoPathContainer() {
+    //  public MultipartFile getPhotoPathContainer() {
    //     return getPhotoPathContainer;
   //  }
 

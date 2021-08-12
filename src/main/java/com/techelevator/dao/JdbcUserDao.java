@@ -121,11 +121,11 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public User getUser(String userName) {
-        String sqlSelectUser = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path, height, weight FROM app_user WHERE user_name = UPPER(?);";
+    public User getUser(Long userId) {
+        String sqlSelectUser = "SELECT user_id, user_name, role, first_name, last_name, email, photo_path, height, weight FROM app_user WHERE user_id = ?;";
 
         try {
-            return jdbcTemplate.queryForObject(sqlSelectUser, new UserRowMapper(), userName);
+            return jdbcTemplate.queryForObject(sqlSelectUser, new UserRowMapper(), userId);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -133,9 +133,9 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public void updateUser(User updatedUser) {
-        String sqlUpdateUser = "UPDATE app_user SET first_name = ?, last_name = ?, email = ?, photo_path = ? WHERE user_name = ?;";
-        jdbcTemplate.update(sqlUpdateUser, updatedUser.getFirstName(), updatedUser.getLastName(), updatedUser.getEmail(), updatedUser.getPhotoPath(), updatedUser.getUsername(), updatedUser.getHeight(), updatedUser.getWeight());
+    public void updateUser(String firstName, String lastName, String email, double height, double weight, byte[] photoPath, Long userId) {
+        String sqlUpdateUser = "UPDATE app_user SET first_name = ?, last_name = ?, email = ?, height = ?, weight = ?, photo_path = ? WHERE user_id = ?;";
+        jdbcTemplate.update(sqlUpdateUser, firstName, lastName, email, height, weight, photoPath, userId);
     }
 
 
