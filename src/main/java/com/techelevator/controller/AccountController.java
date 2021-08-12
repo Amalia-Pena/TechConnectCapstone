@@ -3,10 +3,16 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 
 import com.techelevator.authentication.UnauthorizedException;
+import com.techelevator.dao.JdbcSessionDao;
+import com.techelevator.dao.SessionDao;
+import com.techelevator.dao.UserDao;
 import com.techelevator.model.User;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
@@ -29,6 +36,10 @@ import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
 public class AccountController {
     @Autowired
     private AuthProvider auth;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private SessionDao sessionDao;
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
     public String index(ModelMap modelHolder) {
@@ -45,7 +56,7 @@ public class AccountController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(@RequestParam String username, @RequestParam String password, RedirectAttributes flash) {
         if (auth.signIn(username, password)) {
-            return "redirect:/";
+            return "redirect:profile";
         } else {
             flash.addFlashAttribute("message", "Login Invalid");
             return "redirect:/login";
@@ -75,7 +86,7 @@ public class AccountController {
             return "redirect:/register";
         }
 
-        if(photoPathContainer.isEmpty()) {
+        if (photoPathContainer.isEmpty()) {
             user.setPhotoPath(null);
         } else {
             user.setPhotoPath(photoPathContainer.getBytes());
@@ -89,15 +100,14 @@ public class AccountController {
 
     @RequestMapping(path = "/createEmployee", method = RequestMethod.GET)
     public String showAddEmployeePage(ModelMap modelHolder) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin" })) {
+        if (auth.userHasRole(new String[]{"admin"})) {
             if (!modelHolder.containsAttribute("user")) {
                 modelHolder.put("user", new User());
             }
             return "createEmployee";
 
 
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
 
@@ -112,6 +122,47 @@ public class AccountController {
             return "redirect:/createEmployee";
         }
         auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight());
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/profile", method = RequestMethod.GET)
+    public String showProfilePage(ModelMap modelHolder) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            if (!modelHolder.containsAttribute("user")) {
+                modelHolder.put("user", new User());
+            }
+            modelHolder.put("user", auth.getCurrentUser());
+            return "profile";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping(path = "/profile/image", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getDepartmentImage(@RequestParam("userName") String userName) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        BufferedImage img;
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        byte[] media = auth.getCurrentUser().getPhotoPath();
+        if (media == null) {
+            media = FileUtils.readFileToByteArray(ResourceUtils.getFile("classpath:../../img/150.png"));
+        }
+        return new ResponseEntity<>(media, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/gymSession", method = RequestMethod.GET)
+    public String showGymSession(ModelMap map) {
+        if (!map.containsAttribute("user")) {
+            map.put("user", new User());
+        }
+        map.put("user", auth.getCurrentUser());
+        sessionDao.checkIn(auth.getCurrentUser().getId());
+        return "index";
+    }
+    @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
+    public String showGymSessionCheckOut(ModelMap map) {
+        sessionDao.checkOut(auth.getCurrentUser().getId());
         return "redirect:/";
     }
 }
