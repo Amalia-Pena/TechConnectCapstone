@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.swing.plaf.basic.BasicRadioButtonMenuItemUI;
 import javax.validation.Valid;
 
 import java.awt.image.BufferedImage;
@@ -131,7 +132,7 @@ public class AccountController {
             if (!modelHolder.containsAttribute("user")) {
                 modelHolder.put("user", new User());
             }
-            modelHolder.put("user", userDao.getUser(auth.getCurrentUser().getUsername()));
+            modelHolder.put("user", userDao.getUser(auth.getCurrentUser().getId()));
             return "profile";
         } else {
             throw new UnauthorizedException();
@@ -144,7 +145,7 @@ public class AccountController {
         BufferedImage img;
         headers.setContentType(MediaType.IMAGE_PNG);
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        byte[] media = userDao.getUser(auth.getCurrentUser().getUsername()).getPhotoPath();
+        byte[] media = userDao.getUser(auth.getCurrentUser().getId()).getPhotoPath();
         if (media == null) {
             media = FileUtils.readFileToByteArray(ResourceUtils.getFile("classpath:../../img/150.png"));
         }
@@ -160,9 +161,47 @@ public class AccountController {
         sessionDao.checkIn(auth.getCurrentUser().getId());
         return "index";
     }
+
     @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
     public String showGymSessionCheckOut(ModelMap map) {
         sessionDao.checkOut(auth.getCurrentUser().getId());
         return "redirect:/";
+    }
+
+    @RequestMapping(path = "/editProfile", method = RequestMethod.GET)
+    public String showEditProfilePage(ModelMap modelHolder) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            if (!modelHolder.containsAttribute("user")) {
+                modelHolder.put("user", new User());
+            }
+            modelHolder.put("user", userDao.getUser(auth.getCurrentUser().getId()));
+            return "editProfile";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping(path = "/editProfile", method = RequestMethod.POST, consumes = {MULTIPART_FORM_DATA_VALUE})
+    public String register(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam double height, @RequestParam double weight, @ModelAttribute("newEmployee") User user, BindingResult result, @RequestParam("photoPathContainer") MultipartFile photoPathContainer, @RequestParam(required = false) String radioButton, RedirectAttributes flash) throws IOException {
+
+        if (result.hasErrors()) {
+            flash.addFlashAttribute("user", userDao.getUser(auth.getCurrentUser().getId()));
+            flash.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "user", result);
+            flash.addFlashAttribute("message", "Please fix the following errors:");
+            return "redirect:profile";
+        }
+
+        if (photoPathContainer.isEmpty() && radioButton != null) {
+            userDao.getUser(auth.getCurrentUser().getId()).setPhotoPath(null);
+            userDao.updateUser(firstName, lastName, email, height, weight, null, auth.getCurrentUser().getId());
+            return "redirect:profile";
+        } else if (photoPathContainer.isEmpty()) {
+            userDao.updateUser(firstName, lastName, email, height, weight, userDao.getUser(auth.getCurrentUser().getId()).getPhotoPath(), auth.getCurrentUser().getId());
+            return "redirect:profile";
+        } else {
+            userDao.getUser(auth.getCurrentUser().getId()).setPhotoPath(photoPathContainer.getBytes());
+            userDao.updateUser(firstName, lastName, email, height, weight, photoPathContainer.getBytes(), auth.getCurrentUser().getId());
+            return "redirect:profile";
+        }
     }
 }
