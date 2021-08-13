@@ -25,7 +25,9 @@ public class User {
     private long id;
 
     @NotBlank(message = "Password is required")
+    @Size (min = 4, max = 31, message = "Invalid format")
     private String password;
+    @Size (min = 4, max = 31, message = "Invalid format")
     private String confirmPassword;
 
     private boolean passwordMatching;

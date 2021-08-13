@@ -3,10 +3,11 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 
 import com.techelevator.authentication.UnauthorizedException;
+import com.techelevator.dao.*;
 import com.techelevator.dao.ExerciseClassDao;
-import com.techelevator.dao.SessionDao;
-import com.techelevator.dao.ExerciseClassDao;
-import com.techelevator.dao.UserDao;
+import com.techelevator.model.Equipment;
+import com.techelevator.model.Gym_Session;
+import com.techelevator.model.StrengthEquipmentUsage;
 import com.techelevator.model.User;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.swing.plaf.basic.BasicRadioButtonMenuItemUI;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
 
@@ -46,6 +50,12 @@ public class AccountController {
     private SessionDao sessionDao;
     @Autowired
     private ExerciseClassDao exerciseClassDao;
+    @Autowired
+    private EquipmentDao equipmentDao;
+    @Autowired
+    private AssistanceMediaDao assistanceMediaDao;
+    @Autowired
+    private StrengthDao strengthDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -64,7 +74,12 @@ public class AccountController {
     public String login(@RequestParam String username, @RequestParam String password, RedirectAttributes flash) {
         if (auth.signIn(username, password)) {
             auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+            auth.getSession().setAttribute("strengthEquipmentList", equipmentDao.getAllCategoryEquipment("strength"));
+            auth.getSession().setAttribute("cardioEquipmentList", equipmentDao.getAllCategoryEquipment("cardio"));
+            List<StrengthEquipmentUsage> list = new ArrayList<>();
+            auth.getSession().setAttribute("userStrengthEquipmentUsageList", list);
             return "redirect:home";
+
         } else {
             flash.addFlashAttribute("message", "Login Invalid");
             return "redirect:/login";
@@ -226,207 +241,37 @@ public class AccountController {
 
 
     //View for Gym Equipment Help Home Page:
+
     @RequestMapping(path = "/GymEquipmentHelp", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpHomePage(ModelMap map) throws UnauthorizedException {
+    public String viewGymEquipmentHelpBenchPress(ModelMap map, @RequestParam Long equipment_id) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
+            map.put("equipment_photoPath", assistanceMediaDao.getAssistanceMedia(equipment_id).getPhoto_link());
+            map.put("equipment_photoName", assistanceMediaDao.getAssistanceMedia(equipment_id).getPhoto_name());
+            map.put("equipment_name", equipmentDao.getEquipment(equipment_id).getName());
             return "gymEquipmentHelp";
         } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path = "/GymEquipmentHelpBenchPress", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpBenchPress(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpBenchPress";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpBicepCurlMachine", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpBicepCurlMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpBicepCurlMachine";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpCalfMachine", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpCalfMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpCalfMachine";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpHammerStrengthMachine", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpHammerStrengthMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpHammerStrengthMachine";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpInclineBenchPress", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpInclineBenchPress(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpInclineBenchPress";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpLatPulldown", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpLatPulldown(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpLatPulldown";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpLegCurlMachine", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpLegCurlMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpLegCurlMachine";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpLegExtensionMachine", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpLegExtensionMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpLegExtensionMachine";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpLegPressMachine", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpLegPressMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpLegPressMachine";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpPeckDeckMachine", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpPeckDeckMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpPeckDeckMachine";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpPreacherBench", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpPreacherBench(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpPreacherBench";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpPullupBar", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpPullupBar(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpPullupBar";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-
-    @RequestMapping(path = "/GymEquipmentHelpStationaryBike", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpStationaryBike(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpStationaryBike";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @RequestMapping(path = "/GymEquipmentHelpTreadmill", method = RequestMethod.GET)
-    public String viewGymEquipmentHelpTreadmill(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            if (!map.containsAttribute("user")) {
-                map.put("user", new User());
-            }
-            map.put("user", auth.getCurrentUser());
-            return "gymEquipmentHelpTreadmill";
-        } else {
-            throw new UnauthorizedException();
-        }
-    }
 
 
     @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
     public String showGymSessionCheckOut(ModelMap map) {
+
         sessionDao.checkOut(auth.getCurrentUser().getId());
+        //we need to add a method in the logStrengthEquipmentUseDao that would take in a list of strengthEquipmentUsage objects and insert them into DB
+        List<StrengthEquipmentUsage> strengthEquipmentUsageList = (List<StrengthEquipmentUsage>) auth.getSession().getAttribute("userStrengthEquipmentUsageList");
+        for (int i = 0; i < strengthEquipmentUsageList.size(); i++) {
+            strengthEquipmentUsageList.get(i).setSession_id(sessionDao.getGymSession().getSession_id());
+        }
+        sessionDao.resetGymSession();
         auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+
         return "redirect:home";
     }
 
@@ -441,6 +286,48 @@ public class AccountController {
             throw new UnauthorizedException();
         }
     }
+
+    @RequestMapping(path = "/equipmentSelection", method = RequestMethod.GET)
+    public String showEquipmentSelectionPage(ModelMap modelHolder, HttpSession session) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            if (!modelHolder.containsAttribute("user")) {
+                modelHolder.put("user", new User());
+            }
+            return "equipmentSelection";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping(path = "/logStrengthEquipmentUse", method = RequestMethod.GET)
+    public String showLogStrengthEquipmentUse(ModelMap modelHolder, @RequestParam Long equipmentSelect) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            if (!modelHolder.containsAttribute("user")) {
+                modelHolder.put("user", new User());
+                modelHolder.put("strengthEquipmentUsage", new StrengthEquipmentUsage());
+            }
+            modelHolder.put("equipment_id", equipmentSelect);
+            auth.getSession().setAttribute("strength_equipment_check_in", LocalDateTime.now());
+            return "logStrengthEquipmentUse";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping(path = "/logStrengthEquipmentUse", method = RequestMethod.POST)
+    public String saveLogStrengthEquipmentUse(@Valid @ModelAttribute StrengthEquipmentUsage strengthEquipmentUsage, ModelMap modelHolder, @RequestParam Long equipmentSelect) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            List<StrengthEquipmentUsage> list = (List<StrengthEquipmentUsage>) auth.getSession().getAttribute("userStrengthEquipmentUsageList");
+            strengthEquipmentUsage.setEquipment_id(equipmentSelect);
+            strengthEquipmentUsage.setCheck_in((LocalDate) auth.getSession().getAttribute("strength_equipment_check_in"));
+            strengthEquipmentUsage.setCheck_out(LocalDate.now());
+            list.add(strengthEquipmentUsage);
+            return "logStrengthEquipmentUse";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
 }
 
 

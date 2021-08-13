@@ -4,21 +4,27 @@
 
 BEGIN;
 
+
 -- INSERT statements go here
-insert into equipment (name, met_value) VALUES ('Treadmill', 5.0 );
-insert into equipment (name, met_value) VALUES ('Stationary Bike',  6.8 );
-insert into equipment (name, met_value) VALUES ('Lat Pulldown', 6.3 );
-insert into equipment (name, met_value) VALUES ('Leg Extension Machine', 5.8 );
-insert into equipment (name, met_value) VALUES ('Leg Curl Machine', 6.0 );
-insert into equipment (name, met_value) VALUES ('Leg Press Machine',  6.0 );
-insert into equipment (name, met_value) VALUES ('Bicep Curl Machine', 5.0 );
-insert into equipment (name, met_value) VALUES ('Hammer Strength Machine',  4.8);
-insert into equipment (name, met_value) VALUES ('Bench Press', 6.3 );
-insert into equipment (name, met_value) VALUES ('Incline Bench Press',6.6  );
-insert into equipment (name, met_value) VALUES ('Pullup Bar', 5.5 );
-insert into equipment (name, met_value) VALUES ('Preacher Bench',  5.8);
-insert into equipment (name, met_value) VALUES ('Calf Machine',  5.5);
-insert into equipment (name, met_value) VALUES ('Peck Deck Machine', 6.0 );
+
+insert into equipment_categories (name) values ('strengthEquipmentUsage');
+insert into equipment_categories (name) values ('cardioEquipmentUsage');
+
+
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'cardioEquipmentUsage'),'Treadmill', 5.0 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'cardioEquipmentUsage'),'Stationary Bike',  6.8 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Lat Pulldown', 6.3 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Leg Extension Machine', 5.8 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Leg Curl Machine', 6.0 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Leg Press Machine',  6.0 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Bicep Curl Machine', 5.0 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Hammer Strength Machine',  4.8);
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Bench Press', 6.3 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Incline Bench Press',6.6  );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Pullup Bar', 5.5 );
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Preacher Bench',  5.8);
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Calf Machine',  5.5);
+insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Peck Deck Machine', 6.0 );
 
 
 
@@ -37,6 +43,7 @@ insert into assistance_media (equipment_id, photo_link, photo_name) values ((sel
 insert into assistance_media (equipment_id, photo_link, photo_name) values ((select equipment_id from equipment where name = 'Preacher Bench'), 'https://i.imgur.com/znKzpHU.jpg', 'Preacher Bench Image');
 insert into assistance_media (equipment_id, photo_link, photo_name) values ((select equipment_id from equipment where name = 'Calf Machine'), 'https://i.imgur.com/DBExv3T.jpg', 'Calf Machine Image');
 insert into assistance_media (equipment_id, photo_link, photo_name) values ((select equipment_id from equipment where name = 'Peck Deck Machine'), 'https://i.imgur.com/dNFQ7RL.jpg', 'Peck Deck Machine Image');
+
 
 
 

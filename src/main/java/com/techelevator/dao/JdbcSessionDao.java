@@ -29,9 +29,12 @@ public class JdbcSessionDao implements SessionDao {
         String sqlInsert = "INSERT into gym_session (user_id, check_in, check_out) VALUES (?, ?, ?);";
         gymSession.setCheck_out(LocalDateTime.now());
         jdbcTemplate.update(sqlInsert, user_id, gymSession.getCheck_in(), gymSession.getCheck_out());
-        gymSession = new Gym_Session();
     }
     public Gym_Session getGymSession() {
         return gymSession;
+    }
+
+    public void resetGymSession() {
+        gymSession = new Gym_Session();
     }
 }

@@ -2,16 +2,25 @@ package com.techelevator.dao;
 
 import com.techelevator.model.Assistance_Media;
 import com.techelevator.model.Exercise_Class;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class JdbcAssitanceMediaDao implements AssistanceMediaDao {
+@Component
+public class JdbcAssistanceMediaDao implements AssistanceMediaDao {
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public JdbcAssistanceMediaDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
 
     @Override

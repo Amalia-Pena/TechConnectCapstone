@@ -36,14 +36,24 @@ CREATE TABLE class_members
     FOREIGN KEY (class_id) REFERENCES exercise_class (class_id),
     FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
+CREATE TABLE equipment_categories
+(
+    category_id serial NOT NULL,
+    name varchar (255),
+    PRIMARY KEY (category_id)
+);
 
 create table equipment
 (
     equipment_id serial NOT NULL UNIQUE,
+    category_id int NOT NULL,
     name         varchar(255),
     MET_value    decimal,
-    PRIMARY KEY (equipment_id)
+    PRIMARY KEY (equipment_id),
+    FOREIGN KEY (category_id) REFERENCES equipment_categories(category_id)
 );
+
+
 
 CREATE TABLE assistance_media
 (
@@ -70,19 +80,30 @@ create table gym_session
     PRIMARY KEY (session_id),
     FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
-create table equipment_usage
+
+create table cardio_equipment_usage
 (
-    equipment_usage_id serial UNIQUE,
+    cardio_id serial UNIQUE,
     equipment_id       int NOT NULL,
     session_id         int NOT NULL,
     distance           varchar(255),
-    incline            boolean,
-    decline            boolean,
+    check_in           timestamp,
+    check_out          timestamp,
+    PRIMARY KEY (cardio_id),
+    FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id),
+    FOREIGN KEY (session_id) REFERENCES gym_session (session_id)
+);
+
+create table strength_equipment_usage
+(
+    strength_id serial UNIQUE,
+    equipment_id       int NOT NULL,
+    session_id         int NOT NULL,
     reps               int,
     weight_per_rep     int,
     check_in           timestamp,
     check_out          timestamp,
-    PRIMARY KEY (equipment_usage_id),
+    PRIMARY KEY (strength_id),
     FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id),
     FOREIGN KEY (session_id) REFERENCES gym_session (session_id)
 );

@@ -1,23 +1,34 @@
 package com.techelevator.dao;
 
+import com.techelevator.authentication.PasswordHasher;
 import com.techelevator.model.Assistance_Media;
 import com.techelevator.model.Equipment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Component
 public class JdbcEquipmentDao implements EquipmentDao{
-    private AssistanceMediaDao assistanceMediaDao;
+
+
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public JdbcEquipmentDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     public List<Equipment> getAllEquipment(){
     String sql = "select * from equipment;";
     try{
-        return (List<Equipment>) jdbcTemplate.queryForObject(sql, new EquipmentRowMapper());
+        return (List<Equipment>) jdbcTemplate.query(sql, new EquipmentRowMapper());
     }catch (EmptyResultDataAccessException e) {
         return null;
     }
@@ -33,9 +44,18 @@ public class JdbcEquipmentDao implements EquipmentDao{
        }
     }
 
-    public String getEquipmentMediaPath(Long equipment_id) {
-        return assistanceMediaDao.getAssistanceMedia(equipment_id).getPhoto_link();
+    public List<Equipment> getAllCategoryEquipment(String category_name) {
+        String sql = "select * from equipment join equipment_categories on equipment.category_id = equipment_categories.category_id where equipment_categories.name = ? ;";
+        try {
+            return (List<Equipment>) jdbcTemplate.query(sql, new EquipmentRowMapper(), category_name);
+        }catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
+
+
+
 
 
     private class EquipmentRowMapper implements RowMapper {
@@ -45,6 +65,7 @@ public class JdbcEquipmentDao implements EquipmentDao{
                 Equipment equipment = new Equipment();
 
                 equipment.setEquipment_id(results.getLong("equipment_id"));
+                equipment.setCategory_id(results.getLong("category_id"));
                 equipment.setName(results.getString("name"));
                 equipment.setMet_Value(results.getDouble("met_value"));
                 return equipment;
