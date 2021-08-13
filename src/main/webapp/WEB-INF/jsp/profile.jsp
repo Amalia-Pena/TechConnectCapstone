@@ -21,12 +21,12 @@
                         <div class="row m-l-0 m-r-0">
                             <div class="col-sm-4 bg-c-lite-green user-profile">
                                 <div class="card-block text-center text-white">
-                                    <div class="m-b-25"> <img height="50" width="50" src="${profileImg}" alt="None"/> </div>
+                                    <div class="m-b-25"> <img height="50" width="50" src="${profileImg}" alt="None" style="border-radius: 40px; background:none"/> </div>
                                     <h6 class="f-w-600">Username: ${user.username}</h6>
                                     <p>Member</p>
                                     <c:url var="editProfileUrl" value="/editProfile"/>
                                     <form:form action="${editProfileUrl}" method="GET" modelAttribute="user">
-                                        <button type="submit" class="btn btn-default"><i class="fas fa-edit"></i></button>
+                                        <button type="submit" style="background: none; border: none"><i class="fas fa-edit"></i></button>
                                     </form:form>
                                 </div>
                             </div>
