@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.swing.plaf.basic.BasicRadioButtonMenuItemUI;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.awt.image.BufferedImage;
@@ -46,8 +48,6 @@ public class AccountController {
     private ExerciseClassDao exerciseClassDao;
 
 
-
-
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
     public String index(ModelMap modelHolder) {
         modelHolder.put("user", auth.getCurrentUser());
@@ -63,7 +63,8 @@ public class AccountController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(@RequestParam String username, @RequestParam String password, RedirectAttributes flash) {
         if (auth.signIn(username, password)) {
-            return "redirect:profile";
+            auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+            return "redirect:home";
         } else {
             flash.addFlashAttribute("message", "Login Invalid");
             return "redirect:/login";
@@ -138,7 +139,7 @@ public class AccountController {
             if (!modelHolder.containsAttribute("user")) {
                 modelHolder.put("user", new User());
             }
-            modelHolder.put("user", auth.getCurrentUser());
+            modelHolder.put("user", userDao.getUser(auth.getCurrentUser().getId()));
             return "profile";
         } else {
             throw new UnauthorizedException();
@@ -151,7 +152,7 @@ public class AccountController {
         BufferedImage img;
         headers.setContentType(MediaType.IMAGE_PNG);
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        byte[] media = auth.getCurrentUser().getPhotoPath();
+        byte[] media = userDao.getUser(auth.getCurrentUser().getId()).getPhotoPath();
         if (media == null) {
             media = FileUtils.readFileToByteArray(ResourceUtils.getFile("classpath:../../img/150.png"));
         }
@@ -159,28 +160,64 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/gymSession", method = RequestMethod.GET)
-    public String showGymSession(ModelMap map) {
-        if (!map.containsAttribute("user")) {
-            map.put("user", new User());
+    public String showGymSession(ModelMap map) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            if (!map.containsAttribute("user")) {
+                map.put("user", new User());
+            }
+            map.put("user", auth.getCurrentUser());
+            sessionDao.checkIn(auth.getCurrentUser().getId());
+            auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+            return "loggedInHome";
+        } else {
+            throw new UnauthorizedException();
         }
-        map.put("user", auth.getCurrentUser());
-        sessionDao.checkIn(auth.getCurrentUser().getId());
-        return "index";
     }
-    @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
-    public String showGymSessionCheckOut(ModelMap map) {
-        sessionDao.checkOut(auth.getCurrentUser().getId());
-        return "redirect:/";
+
+
+    @RequestMapping(path = "/editProfile", method = RequestMethod.GET)
+    public String showEditProfilePage(ModelMap modelHolder) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            if (!modelHolder.containsAttribute("user")) {
+                modelHolder.put("user", new User());
+            }
+            modelHolder.put("user", userDao.getUser(auth.getCurrentUser().getId()));
+            return "editProfile";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping(path = "/editProfile", method = RequestMethod.POST, consumes = {MULTIPART_FORM_DATA_VALUE})
+    public String register(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam double height, @RequestParam double weight, @ModelAttribute("newEmployee") User user, BindingResult result, @RequestParam("photoPathContainer") MultipartFile photoPathContainer, @RequestParam(required = false) String radioButton, RedirectAttributes flash) throws IOException {
+
+        if (result.hasErrors()) {
+            flash.addFlashAttribute("user", userDao.getUser(auth.getCurrentUser().getId()));
+            flash.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "user", result);
+            flash.addFlashAttribute("message", "Please fix the following errors:");
+            return "redirect:profile";
+        }
+
+        if (photoPathContainer.isEmpty() && radioButton != null) {
+            userDao.getUser(auth.getCurrentUser().getId()).setPhotoPath(null);
+            userDao.updateUser(firstName, lastName, email, height, weight, null, auth.getCurrentUser().getId());
+            return "redirect:profile";
+        } else if (photoPathContainer.isEmpty()) {
+            userDao.updateUser(firstName, lastName, email, height, weight, userDao.getUser(auth.getCurrentUser().getId()).getPhotoPath(), auth.getCurrentUser().getId());
+            return "redirect:profile";
+        } else {
+            userDao.getUser(auth.getCurrentUser().getId()).setPhotoPath(photoPathContainer.getBytes());
+            userDao.updateUser(firstName, lastName, email, height, weight, photoPathContainer.getBytes(), auth.getCurrentUser().getId());
+            return "redirect:profile";
+        }
     }
 
 
     //View for Exercise Classes:
 
 
-
-
     //View for Exercise Classes:
-    @RequestMapping(path ="/exerciseClasses", method = RequestMethod.GET)
+    @RequestMapping(path = "/exerciseClasses", method = RequestMethod.GET)
     public String viewExerciseClasses(HttpServletRequest request) {
         request.setAttribute("exerciseClass", exerciseClassDao.getAllClasses());
         request.setAttribute("sourceUrl", "exerciseClass");
@@ -189,7 +226,7 @@ public class AccountController {
 
 
     //View for Gym Equipment Help Home Page:
-    @RequestMapping(path ="/GymEquipmentHelp", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelp", method = RequestMethod.GET)
     public String viewGymEquipmentHelpHomePage(ModelMap map) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
@@ -202,204 +239,211 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpBenchPress", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpBenchPress", method = RequestMethod.GET)
     public String viewGymEquipmentHelpBenchPress(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpBenchPress";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpBicepCurlMachine", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpBicepCurlMachine", method = RequestMethod.GET)
     public String viewGymEquipmentHelpBicepCurlMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpBicepCurlMachine";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpCalfMachine", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpCalfMachine", method = RequestMethod.GET)
     public String viewGymEquipmentHelpCalfMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpCalfMachine";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpHammerStrengthMachine", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpHammerStrengthMachine", method = RequestMethod.GET)
     public String viewGymEquipmentHelpHammerStrengthMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpHammerStrengthMachine";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpInclineBenchPress", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpInclineBenchPress", method = RequestMethod.GET)
     public String viewGymEquipmentHelpInclineBenchPress(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpInclineBenchPress";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpLatPulldown", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpLatPulldown", method = RequestMethod.GET)
     public String viewGymEquipmentHelpLatPulldown(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpLatPulldown";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpLegCurlMachine", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpLegCurlMachine", method = RequestMethod.GET)
     public String viewGymEquipmentHelpLegCurlMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpLegCurlMachine";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpLegExtensionMachine", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpLegExtensionMachine", method = RequestMethod.GET)
     public String viewGymEquipmentHelpLegExtensionMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpLegExtensionMachine";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpLegPressMachine", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpLegPressMachine", method = RequestMethod.GET)
     public String viewGymEquipmentHelpLegPressMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpLegPressMachine";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpPeckDeckMachine", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpPeckDeckMachine", method = RequestMethod.GET)
     public String viewGymEquipmentHelpPeckDeckMachine(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpPeckDeckMachine";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpPreacherBench", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpPreacherBench", method = RequestMethod.GET)
     public String viewGymEquipmentHelpPreacherBench(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpPreacherBench";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpPullupBar", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpPullupBar", method = RequestMethod.GET)
     public String viewGymEquipmentHelpPullupBar(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpPullupBar";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
 
-    @RequestMapping(path ="/GymEquipmentHelpStationaryBike", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpStationaryBike", method = RequestMethod.GET)
     public String viewGymEquipmentHelpStationaryBike(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpStationaryBike";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path ="/GymEquipmentHelpTreadmill", method = RequestMethod.GET)
+    @RequestMapping(path = "/GymEquipmentHelpTreadmill", method = RequestMethod.GET)
     public String viewGymEquipmentHelpTreadmill(ModelMap map) throws UnauthorizedException {
-        if (auth.userHasRole(new String[] { "admin", "user", "employee" })) {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
             map.put("user", auth.getCurrentUser());
             return "gymEquipmentHelpTreadmill";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
 
 
+    @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
+    public String showGymSessionCheckOut(ModelMap map) {
+        sessionDao.checkOut(auth.getCurrentUser().getId());
+        auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+        return "redirect:home";
+    }
 
-
+    @RequestMapping(path = "/home", method = RequestMethod.GET)
+    public String showLogInHomePage(ModelMap modelHolder, HttpSession session) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            if (!modelHolder.containsAttribute("user")) {
+                modelHolder.put("user", new User());
+            }
+            return "loggedInHome";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
 }
+
+
+
+
+

@@ -29,7 +29,9 @@ public class SessionAuthProvider implements AuthProvider {
         this.session = session;
         this.dao = dao;
     }
-
+    public HttpSession getSession(){
+        return session;
+    }
     @Override
     public boolean isLoggedIn() {
         return session.getAttribute(USER_KEY) != null;

@@ -38,8 +38,8 @@ public interface UserDao {
      */
     public List<User> getAllUsers();
 
-    public User getUser(String userName);
+    public User getUser(Long userId);
 
-    public void updateUser(User updatedUser);
+    public void updateUser(String firstName, String lastName, String email, double height, double weight, byte[] photoPath, Long userId);
 
 }

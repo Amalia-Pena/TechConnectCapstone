@@ -5,6 +5,7 @@ public class Equipment {
     private Long equipment_id;
     private String name;
     private double met_Value;
+    private Assistance_Media assistance_media;
 
     // Getters
 
@@ -20,7 +21,10 @@ public class Equipment {
         return met_Value;
     }
 
-    // Setters
+    public Assistance_Media getAssistance_media() {
+        return assistance_media;
+    }
+// Setters
 
     public void setEquipment_id(Long equipment_id) {
         this.equipment_id = equipment_id;
@@ -32,5 +36,9 @@ public class Equipment {
 
     public void setMet_Value(double met_Value) {
         this.met_Value = met_Value;
+    }
+
+    public void setAssistance_media(Assistance_Media assistance_media) {
+        this.assistance_media = assistance_media;
     }
 }
