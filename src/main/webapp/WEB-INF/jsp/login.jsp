@@ -16,12 +16,12 @@
             <div class="text-box">
                 <i class="fas fa-user"></i>
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username" style="color:black">
             </div>
             <div class="text-box">
                 <i class="fas fa-lock"></i>
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" style="color:black">
             </div>
             <button type="submit" class="btn btn-default">Login</button>
         </div>
