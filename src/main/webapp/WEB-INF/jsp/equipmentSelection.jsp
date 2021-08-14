@@ -7,24 +7,29 @@
 
 <h1>Welcome to the Equipment Selection Page</h1>
 
-<c:url var="equipmentUrl" value="/GymEquipmentHelp?equipment_id=${equipment.equipment_id}"/>
-<c:url var="logStrengthUrl" value="/logStrengthEquipmentUse"/>
+<c:url var="logEquipmentUrl" value="/logEquipmentUse"/>
 
-<form action="${logStrengthUrl}">
+<form action="${logEquipmentUrl}">
     <label for="equipmentSelect">Please choose a </label>
     <select name="equipmentSelect" id="equipmentSelect">
-
-        <c:forEach var="equipment" items="${strengthEquipmentList}">
-            <option value="${equipment.equipment_id}">
-                    ${equipment.name}
-            </option>
-        </c:forEach>
+        <optgroup label="Strength Equipment">
+            <c:forEach var="equipment" items="${strengthEquipmentList}">
+                <option value="${equipment.equipment_id}">
+                        ${equipment.name}
+                </option>
+            </c:forEach>
+        </optgroup>
+        <optgroup label="Cardio Equipment">
+            <c:forEach var="equipment" items="${cardioEquipmentList}">
+                <option value="${equipment.equipment_id}">
+                        ${equipment.name}
+                </option>
+            </c:forEach>
+        </optgroup>
     </select>
     <br><br>
     <input type="submit" value="Check In">
 </form>
-
-
 
 
 <%@ include file="common/footer.jspf" %>

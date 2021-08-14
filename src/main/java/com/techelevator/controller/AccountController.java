@@ -5,10 +5,7 @@ import com.techelevator.authentication.AuthProvider;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.dao.*;
 import com.techelevator.dao.ExerciseClassDao;
-import com.techelevator.model.Equipment;
-import com.techelevator.model.Gym_Session;
-import com.techelevator.model.StrengthEquipmentUsage;
-import com.techelevator.model.User;
+import com.techelevator.model.*;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -55,7 +52,7 @@ public class AccountController {
     @Autowired
     private AssistanceMediaDao assistanceMediaDao;
     @Autowired
-    private StrengthDao strengthDao;
+    private EquipmentUsageDao equipmentUsageDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -76,8 +73,7 @@ public class AccountController {
             auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
             auth.getSession().setAttribute("strengthEquipmentList", equipmentDao.getAllCategoryEquipment("strength"));
             auth.getSession().setAttribute("cardioEquipmentList", equipmentDao.getAllCategoryEquipment("cardio"));
-            List<StrengthEquipmentUsage> list = new ArrayList<>();
-            auth.getSession().setAttribute("userStrengthEquipmentUsageList", list);
+            auth.getSession().setAttribute("userEquipmentUsageList", new ArrayList<>());
             return "redirect:home";
 
         } else {
@@ -264,14 +260,14 @@ public class AccountController {
     public String showGymSessionCheckOut(ModelMap map) {
 
         sessionDao.checkOut(auth.getCurrentUser().getId());
-        //we need to add a method in the logStrengthEquipmentUseDao that would take in a list of strengthEquipmentUsage objects and insert them into DB
-        List<StrengthEquipmentUsage> strengthEquipmentUsageList = (List<StrengthEquipmentUsage>) auth.getSession().getAttribute("userStrengthEquipmentUsageList");
-        for (int i = 0; i < strengthEquipmentUsageList.size(); i++) {
-            strengthEquipmentUsageList.get(i).setSession_id(sessionDao.getGymSession().getSession_id());
+        List<EquipmentUsage> equipmentUsageList = (List<EquipmentUsage>) auth.getSession().getAttribute("userEquipmentUsageList");
+        for (int i = 0; i < equipmentUsageList.size(); i++) {
+            equipmentUsageList.get(i).setSession_id(sessionDao.getGymSession().getSession_id());
         }
         sessionDao.resetGymSession();
         auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
-
+        List<EquipmentUsage> list = new ArrayList<>();
+        auth.getSession().setAttribute("userEquipmentUsageList", list);
         return "redirect:home";
     }
 
@@ -299,30 +295,30 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(path = "/logStrengthEquipmentUse", method = RequestMethod.GET)
-    public String showLogStrengthEquipmentUse(ModelMap modelHolder, @RequestParam Long equipmentSelect) throws UnauthorizedException {
+    @RequestMapping(path = "/logEquipmentUse", method = RequestMethod.GET)
+    public String showLogEquipmentUse(ModelMap modelHolder, @RequestParam Long equipmentSelect) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
             if (!modelHolder.containsAttribute("user")) {
                 modelHolder.put("user", new User());
-                modelHolder.put("strengthEquipmentUsage", new StrengthEquipmentUsage());
+                modelHolder.put("equipmentUsage", new EquipmentUsage());
             }
             modelHolder.put("equipment_id", equipmentSelect);
-            auth.getSession().setAttribute("strength_equipment_check_in", LocalDateTime.now());
-            return "logStrengthEquipmentUse";
+            auth.getSession().setAttribute("equipment_check_in", LocalDateTime.now());
+            return "logEquipmentUse";
         } else {
             throw new UnauthorizedException();
         }
     }
 
-    @RequestMapping(path = "/logStrengthEquipmentUse", method = RequestMethod.POST)
-    public String saveLogStrengthEquipmentUse(@Valid @ModelAttribute StrengthEquipmentUsage strengthEquipmentUsage, ModelMap modelHolder, @RequestParam Long equipmentSelect) throws UnauthorizedException {
+    @RequestMapping(path = "/logEquipmentUse", method = RequestMethod.POST)
+    public String saveLogSEquipmentUse(@Valid @ModelAttribute EquipmentUsage equipmentUsage, ModelMap modelHolder, @RequestParam Long equipmentSelect) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
-            List<StrengthEquipmentUsage> list = (List<StrengthEquipmentUsage>) auth.getSession().getAttribute("userStrengthEquipmentUsageList");
-            strengthEquipmentUsage.setEquipment_id(equipmentSelect);
-            strengthEquipmentUsage.setCheck_in((LocalDate) auth.getSession().getAttribute("strength_equipment_check_in"));
-            strengthEquipmentUsage.setCheck_out(LocalDate.now());
-            list.add(strengthEquipmentUsage);
-            return "logStrengthEquipmentUse";
+            List<EquipmentUsage> list = (List<EquipmentUsage>) auth.getSession().getAttribute("userEquipmentUsageList");
+            equipmentUsage.setEquipment_id(equipmentSelect);
+            equipmentUsage.setCheck_in((LocalDate) auth.getSession().getAttribute("equipment_check_in"));
+            equipmentUsage.setCheck_out(LocalDate.now());
+            list.add(equipmentUsage);
+            return "logEquipmentUse";
         } else {
             throw new UnauthorizedException();
         }

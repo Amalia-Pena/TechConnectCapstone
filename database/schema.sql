@@ -81,34 +81,20 @@ create table gym_session
     FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
 
-create table cardio_equipment_usage
+create table equipment_usage
 (
-    cardio_id serial UNIQUE,
-    equipment_id       int NOT NULL,
-    session_id         int NOT NULL,
-    distance           varchar(255),
-    check_in           timestamp,
-    check_out          timestamp,
-    PRIMARY KEY (cardio_id),
-    FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id),
-    FOREIGN KEY (session_id) REFERENCES gym_session (session_id)
-);
-
-create table strength_equipment_usage
-(
-    strength_id serial UNIQUE,
+    equipment_usage_id serial UNIQUE,
     equipment_id       int NOT NULL,
     session_id         int NOT NULL,
     reps               int,
     weight_per_rep     int,
+    distance           decimal,
     check_in           timestamp,
     check_out          timestamp,
-    PRIMARY KEY (strength_id),
+    PRIMARY KEY (equipment_usage_id),
     FOREIGN KEY (equipment_id) REFERENCES Equipment (equipment_id),
     FOREIGN KEY (session_id) REFERENCES gym_session (session_id)
 );
-
-
 
 CREATE TABLE goal
 (
@@ -118,8 +104,6 @@ CREATE TABLE goal
     PRIMARY KEY (goal_id),
     FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );
-
-
 
 CREATE TABLE person_goals
 (

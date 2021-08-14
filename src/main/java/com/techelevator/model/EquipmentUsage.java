@@ -6,8 +6,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class StrengthEquipmentUsage {
-    private Long strength_id;
+public class EquipmentUsage {
+    private Long equipment_usage_id;
     private Long equipment_id;
     private Long session_id;
 
@@ -19,15 +19,20 @@ public class StrengthEquipmentUsage {
     @Size(min = 1, message = "Do you even lift bro????")
     private int weight_per_rep;
 
+    @NotBlank
+    @Size(min = 0, message = "Distance cannot be less than zero.")
+    private double distance;
+
+
     private LocalDate check_in;
     private LocalDate check_out;
 
-    public Long getStrength_id() {
-        return strength_id;
+    public Long getEquipment_usage_id() {
+        return equipment_usage_id;
     }
 
-    public void setStrength_id(Long strength_id) {
-        this.strength_id = strength_id;
+    public void setEquipment_usage_id(Long equipment_usage_id) {
+        this.equipment_usage_id = equipment_usage_id;
     }
 
     public Long getEquipment_id() {
@@ -60,6 +65,14 @@ public class StrengthEquipmentUsage {
 
     public void setWeight_per_rep(int weight_per_rep) {
         this.weight_per_rep = weight_per_rep;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public LocalDate getCheck_in() {

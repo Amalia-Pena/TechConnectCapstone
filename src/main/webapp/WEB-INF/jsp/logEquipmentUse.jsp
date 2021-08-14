@@ -1,6 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ include file = "common/header.jspf" %>
-<c:url var="registerUrl" value="/register"/>
+<c:url var="strengthEquipmentUrl" value="/logEquipmentUse"/>
 
 <!DOCTYPE html>
 <html>
@@ -9,7 +9,7 @@
     <title>Log Strength Equipment Use</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="<c:url value="/css/registrationForm.css"/>" rel="stylesheet" type="text/css" />
+    <link href="<c:url value="/css/registrationForm.css"/>" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -17,7 +17,8 @@
 
 
     <div class="inner">
-        <form:form action="${registerUrl}" method="POST" modelAttribute="strengthEquipmentUsage" enctype="multipart/form-data">
+        <form:form action="${strengthEquipmentUrl}" method="POST" modelAttribute="equipmentUsage"
+                   enctype="multipart/form-data">
             <div class="user-details">
                 <div class="form-group">
                     <div class="form-wrapper">
