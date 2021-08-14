@@ -4,8 +4,9 @@
 <h1>Welcome to the site!</h1>
 
 <c:url var="gymSessionUrl" value="/gymSession"/>
+<c:url var="equipmentLogUrl" value="/equipmentSelection"/>
 <c:if test="${gymSession == null}">
-    <form:form action="${gymSessionUrl}" method="GET" modelAttribute="user">
+    <form:form action="${equipmentLogUrl}" method="GET" modelAttribute="user">
         <button type="submit" class="btn btn-default">Start Workout</button>
     </form:form>
 </c:if>

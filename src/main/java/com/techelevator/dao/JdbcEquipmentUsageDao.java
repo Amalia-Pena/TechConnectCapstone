@@ -21,11 +21,10 @@ public class JdbcEquipmentUsageDao implements EquipmentUsageDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void logEquipmentUsage(List<EquipmentUsage> equipmentUsage) {
+    public void logEquipmentUsage(EquipmentUsage equipmentUsage) {
         String sql = "insert into equipment_usage (equipment_id, session_id, reps, weight_per_rep, distance, check_in, check_out) values (?,?,?,?,?,?,?);";
-        for (int i = 0; i < equipmentUsage.size(); i++) {
-            jdbcTemplate.update(sql, equipmentUsage.get(i).getEquipment_id(), equipmentUsage.get(i).getSession_id(), equipmentUsage.get(i).getReps(), equipmentUsage.get(i).getWeight_per_rep(), equipmentUsage.get(i).getDistance(), equipmentUsage.get(i).getCheck_in(), equipmentUsage.get(i).getCheck_out());
-        }
+        jdbcTemplate.update(sql, equipmentUsage.getEquipment_id(), equipmentUsage.getSession_id(), equipmentUsage.getReps(), equipmentUsage.getWeight_per_rep(), equipmentUsage.getDistance(), equipmentUsage.getCheck_in(), equipmentUsage.getCheck_out());
+
     }
 
     private class EquipmentRowMapper implements RowMapper {
@@ -39,8 +38,8 @@ public class JdbcEquipmentUsageDao implements EquipmentUsageDao {
                 equipmentUsage.setReps(results.getInt("reps"));
                 equipmentUsage.setWeight_per_rep(results.getInt("weight_per_rep"));
                 equipmentUsage.setDistance(results.getDouble("distance"));
-                equipmentUsage.setCheck_in(results.getDate("check_in").toLocalDate());
-                equipmentUsage.setCheck_out(results.getDate("check_out").toLocalDate());
+                equipmentUsage.setCheck_in(results.getTimestamp("check_in"));
+                equipmentUsage.setCheck_out(results.getTimestamp("check_out"));
                 return equipmentUsage;
             } catch (SQLException e) {
                 return null;

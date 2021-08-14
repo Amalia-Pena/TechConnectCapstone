@@ -1,8 +1,12 @@
 package com.techelevator.model;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -11,21 +15,21 @@ public class EquipmentUsage {
     private Long equipment_id;
     private Long session_id;
 
-    @NotBlank(message = "Cannot be blank")
-    @Size(min = 1, message = "Do you even lift bro????")
+    @NotNull(message = "Cannot be blank")
+    @Min(value = 1, message = "Do you even lift bro????")
     private int reps;
 
-    @NotBlank(message = "Cannot be blank")
-    @Size(min = 1, message = "Do you even lift bro????")
+    @NotNull(message = "Cannot be blank")
+    @Min(value = 1, message = "Do you even lift bro????")
     private int weight_per_rep;
 
-    @NotBlank
-    @Size(min = 0, message = "Distance cannot be less than zero.")
+    @NotNull
+    @Min(value = 0, message = "Distance cannot be less than zero.")
     private double distance;
 
 
-    private LocalDate check_in;
-    private LocalDate check_out;
+    private Timestamp check_in;
+    private Timestamp check_out;
 
     public Long getEquipment_usage_id() {
         return equipment_usage_id;
@@ -75,19 +79,19 @@ public class EquipmentUsage {
         this.distance = distance;
     }
 
-    public LocalDate getCheck_in() {
+    public Timestamp getCheck_in() {
         return check_in;
     }
 
-    public void setCheck_in(LocalDate check_in) {
+    public void setCheck_in(Timestamp check_in) {
         this.check_in = check_in;
     }
 
-    public LocalDate getCheck_out() {
+    public Timestamp getCheck_out() {
         return check_out;
     }
 
-    public void setCheck_out(LocalDate check_out) {
+    public void setCheck_out(Timestamp check_out) {
         this.check_out = check_out;
     }
 }

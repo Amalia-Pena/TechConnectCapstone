@@ -1,13 +1,15 @@
 package com.techelevator.model;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Gym_Session {
     // Instance variables
     private Long session_id;
-    private Long profile_id;
-    private LocalDateTime check_in;
-    private LocalDateTime check_out;
+    private Long user_id;
+    private Timestamp check_in;
+    private Timestamp check_out;
 
     // Getters
 
@@ -15,15 +17,15 @@ public class Gym_Session {
         return session_id;
     }
 
-    public Long getProfile_id() {
-        return profile_id;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public LocalDateTime getCheck_in() {
+    public Timestamp getCheck_in() {
         return check_in;
     }
 
-    public LocalDateTime getCheck_out() {
+    public Timestamp getCheck_out() {
         return check_out;
     }
 
@@ -33,15 +35,15 @@ public class Gym_Session {
         this.session_id = session_id;
     }
 
-    public void setProfile_id(Long profile_id) {
-        this.profile_id = profile_id;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
-    public void setCheck_in(LocalDateTime check_in) {
+    public void setCheck_in(Timestamp check_in) {
         this.check_in = check_in;
     }
 
-    public void setCheck_out(LocalDateTime check_out) {
+    public void setCheck_out(Timestamp check_out) {
         this.check_out = check_out;
     }
 }

@@ -7,18 +7,31 @@ BEGIN;
 
 -- INSERT statements go here
 
-insert into equipment_categories (name) values ('strengthEquipmentUsage');
-insert into equipment_categories (name) values ('cardioEquipmentUsage');
+insert into equipment_categories (name)
+values ('strength');
+insert into equipment_categories (name)
+values ('cardio');
 
 
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'cardioEquipmentUsage'),'Treadmill', 5.0 );
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'cardioEquipmentUsage'),'Stationary Bike',  6.8 );
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Lat Pulldown', 6.3 );
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Leg Extension Machine', 5.8 );
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Leg Curl Machine', 6.0 );
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Leg Press Machine',  6.0 );
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Bicep Curl Machine', 5.0 );
-insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Hammer Strength Machine',  4.8);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'cardioEquipmentUsage'), 'Treadmill', 5.0);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'cardioEquipmentUsage'), 'Stationary Bike', 6.8);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'), 'Lat Pulldown', 6.3);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'), 'Leg Extension Machine',
+        5.8);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'), 'Leg Curl Machine', 6.0);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'), 'Leg Press Machine', 6.0);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'), 'Bicep Curl Machine',
+        5.0);
+insert into equipment (category_id, name, met_value)
+VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'), 'Hammer Strength Machine',
+        4.8);
 insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Bench Press', 6.3 );
 insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Incline Bench Press',6.6  );
 insert into equipment (category_id, name, met_value) VALUES ((select category_id from equipment_categories where name = 'strengthEquipmentUsage'),'Pullup Bar', 5.5 );

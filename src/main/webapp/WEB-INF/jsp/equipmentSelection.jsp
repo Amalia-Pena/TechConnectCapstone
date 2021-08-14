@@ -9,7 +9,7 @@
 
 <c:url var="logEquipmentUrl" value="/logEquipmentUse"/>
 
-<form action="${logEquipmentUrl}">
+<form action="${logEquipmentUrl}" method="GET" modelAttribute="equipmentUsage">
     <label for="equipmentSelect">Please choose a </label>
     <select name="equipmentSelect" id="equipmentSelect">
         <optgroup label="Strength Equipment">

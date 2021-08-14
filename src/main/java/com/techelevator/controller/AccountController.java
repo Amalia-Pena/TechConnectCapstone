@@ -26,6 +26,9 @@ import javax.validation.Valid;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -255,7 +258,6 @@ public class AccountController {
     }
 
 
-
     @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
     public String showGymSessionCheckOut(ModelMap map) {
 
@@ -263,6 +265,7 @@ public class AccountController {
         List<EquipmentUsage> equipmentUsageList = (List<EquipmentUsage>) auth.getSession().getAttribute("userEquipmentUsageList");
         for (int i = 0; i < equipmentUsageList.size(); i++) {
             equipmentUsageList.get(i).setSession_id(sessionDao.getGymSession().getSession_id());
+            equipmentUsageDao.logEquipmentUsage(equipmentUsageList.get(i));
         }
         sessionDao.resetGymSession();
         auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
@@ -303,7 +306,10 @@ public class AccountController {
                 modelHolder.put("equipmentUsage", new EquipmentUsage());
             }
             modelHolder.put("equipment_id", equipmentSelect);
-            auth.getSession().setAttribute("equipment_check_in", LocalDateTime.now());
+            Timestamp ts = new Timestamp(System.currentTimeMillis());
+            auth.getSession().setAttribute("equipment_check_in", ts);
+            auth.getSession().setAttribute("equipmentSelection", equipmentSelect);
+            auth.getSession().setAttribute("equipment", equipmentDao.getEquipment(equipmentSelect));
             return "logEquipmentUse";
         } else {
             throw new UnauthorizedException();
@@ -311,17 +317,26 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/logEquipmentUse", method = RequestMethod.POST)
-    public String saveLogSEquipmentUse(@Valid @ModelAttribute EquipmentUsage equipmentUsage, ModelMap modelHolder, @RequestParam Long equipmentSelect) throws UnauthorizedException {
+    public String saveLogSEquipmentUse(@Valid @ModelAttribute("equipmentUsage") EquipmentUsage equipmentUsage, BindingResult result, RedirectAttributes flash, ModelMap modelHolder) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            if (result.hasErrors()) {
+                flash.addFlashAttribute("equipmentUsage", equipmentUsage);
+                flash.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "equipmentUsage", result);
+                flash.addFlashAttribute("message", "Please fix the following errors:");
+
+                return "redirect:logEquipmentUse?equipmentSelect=" + auth.getSession().getAttribute("equipmentSelection");
+            }
             List<EquipmentUsage> list = (List<EquipmentUsage>) auth.getSession().getAttribute("userEquipmentUsageList");
-            equipmentUsage.setEquipment_id(equipmentSelect);
-            equipmentUsage.setCheck_in((LocalDate) auth.getSession().getAttribute("equipment_check_in"));
-            equipmentUsage.setCheck_out(LocalDate.now());
+            equipmentUsage.setEquipment_id((Long) auth.getSession().getAttribute("equipmentSelection"));
+            equipmentUsage.setCheck_in((Timestamp) auth.getSession().getAttribute("equipment_check_in"));
+            Timestamp ts = new Timestamp(System.currentTimeMillis());
+            equipmentUsage.setCheck_out(ts);
             list.add(equipmentUsage);
-            return "logEquipmentUse";
+            auth.getSession().setAttribute("userEquipmentUsageList", list);
         } else {
             throw new UnauthorizedException();
         }
+        return "redirect:equipmentSelection";
     }
 
 }
