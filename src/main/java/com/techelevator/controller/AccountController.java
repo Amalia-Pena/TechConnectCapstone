@@ -234,10 +234,15 @@ public class AccountController {
 
     //View for Exercise Classes:
     @RequestMapping(path = "/exerciseClasses", method = RequestMethod.GET)
-    public String viewExerciseClasses(HttpServletRequest request) {
-        request.setAttribute("exerciseClass", exerciseClassDao.getAllClasses());
-        request.setAttribute("sourceUrl", "exerciseClass");
-        return "exerciseClass";
+    public String viewExerciseClasses(HttpServletRequest request) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            request.setAttribute("exerciseClass", exerciseClassDao.getAllClasses());
+            request.setAttribute("sourceUrl", "exerciseClass");
+            return "exerciseClass";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
     }
 
 
@@ -342,15 +347,25 @@ public class AccountController {
     }
 
     @RequestMapping("employeeEquipmentMetric")
-    public String showEmployeeEquipmentMetric() {
-        return "EmployeeEquipmentMetric";
+    public String showEmployeeEquipmentMetric() throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            return "EmployeeEquipmentMetric";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
     }
 
     @RequestMapping("employeeEquipmentMetricList")
-    public String searchEmployeeEquipmentList(@RequestParam double check_in, @RequestParam double check_out, ModelMap modelHolder){
-        List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
-        modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
-        return "EmployeeEquipmentMetric";
+    public String searchEmployeeEquipmentList(@RequestParam double check_in, @RequestParam double check_out, ModelMap modelHolder) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
+            modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
+            return "EmployeeEquipmentMetric";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
     }
 
 }

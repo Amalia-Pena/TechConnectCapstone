@@ -27,11 +27,8 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="${homeUrl}">Home</a></li>
-                <c:url var="aboutUrl" value="/about"/>
-                <li><a href="${aboutUrl}">About</a></li>
-                <c:url var="exerciseClassesUrl" value="/exerciseClasses"/>
-                <li><a href="${exerciseClassesUrl}">Exercise Classes</a></li>
+                <c:url var="startWorkoutHomeUrl" value="/home"/>
+                <li><a href="${startWorkoutHomeUrl}">Home</a></li>
                 <c:if test="${not empty appCurrentUser}">
                     <c:if test="${appCurrentUser.role == 'admin'}">
                         <c:url var="addEmployeeUrl" value="/createEmployee"/>
@@ -41,6 +38,11 @@
                         <c:url var="viewProfile" value="/profile"/>
                         <li><a href="${viewProfile}">View Profile</a></li>
                     </c:if>
+
+                    <c:url var="equipmentSelectionUrl" value="/equipmentSelection"/>
+                    <li><a href="${equipmentSelectionUrl}">Equipment Selection</a></li>
+                    <c:url var="exerciseClassesUrl" value="/exerciseClasses"/>
+                    <li><a href="${exerciseClassesUrl}">Exercise Classes</a></li>
                 </c:if>
             </ul>
             <ul class="nav navbar-nav navbar-right">
