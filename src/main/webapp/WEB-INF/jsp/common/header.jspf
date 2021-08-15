@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <c:url var="cssUrl" value="/css/site.css"/>
     <link rel="stylesheet" href="${cssUrl}"/>
+    <c:url var="profileUrl" value="/profile"/>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -50,7 +51,7 @@
                     <li><a href="${registerUrl}">Register</a></li>
                 </c:if>
                 <c:if test="${not empty appCurrentUser}">
-                    <li><a href="/"><c:out value="${appCurrentUser.username}"/></a></li>
+                    <li><a href="${profileUrl}"><c:out value="${appCurrentUser.username}"/></a></li>
                     <c:url var="logoffUrl" value="/logoff"/>
                     <li>
                         <form action="${logoffUrl}" method="POST" class="navbar-form">
