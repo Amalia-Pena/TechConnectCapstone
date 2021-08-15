@@ -56,6 +56,8 @@ public class AccountController {
     private AssistanceMediaDao assistanceMediaDao;
     @Autowired
     private EquipmentUsageDao equipmentUsageDao;
+    @Autowired
+    private EquipmentMetricDao equipmentMetricDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -337,6 +339,18 @@ public class AccountController {
             throw new UnauthorizedException();
         }
         return "redirect:equipmentSelection";
+    }
+
+    @RequestMapping("employeeEquipmentMetric")
+    public String showEmployeeEquipmentMetric() {
+        return "EmployeeEquipmentMetric";
+    }
+
+    @RequestMapping("employeeEquipmentMetricList")
+    public String searchEmployeeEquipmentList(@RequestParam double check_in, @RequestParam double check_out, ModelMap modelHolder){
+        List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
+        modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
+        return "EmployeeEquipmentMetric";
     }
 
 }
