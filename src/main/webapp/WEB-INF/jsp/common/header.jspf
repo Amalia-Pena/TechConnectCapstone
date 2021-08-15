@@ -30,8 +30,8 @@
                 <li><a href="${homeUrl}">Home</a></li>
                 <c:url var="aboutUrl" value="/about"/>
                 <li><a href="${aboutUrl}">About</a></li>
-                <c:url var="privateUrl" value="/private"/>
-                <li><a href="${privateUrl}">Private</a></li>
+                <c:url var="exerciseClassesUrl" value="/exerciseClasses"/>
+                <li><a href="${exerciseClassesUrl}">Exercise Classes</a></li>
                 <c:if test="${not empty appCurrentUser}">
                     <c:if test="${appCurrentUser.role == 'admin'}">
                         <c:url var="addEmployeeUrl" value="/createEmployee"/>
