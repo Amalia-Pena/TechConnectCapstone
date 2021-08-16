@@ -1,4 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="common/header.jspf" %>
 <c:url var="logEquipmentUrl" value="/logEquipmentUse"/>
 
@@ -9,11 +10,10 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="../../css/equipmentSelection.css" rel="stylesheet" type="text/css" />
+    <link href="/css/equipmentSelection.css" rel="stylesheet" type="text/css" />
     <title>Equipment Selection</title>
 </head>
-<body style="background: url(/siteImages/equipmentSelection.jpg) no-repeat;
-    background-size: cover;">
+<body style=" background: url(../../siteImages/equipmentSelection.jpg)">
     <h1>Welcome to the Equipment Selection Page</h1>
 
     <form action="${logEquipmentUrl}" method="GET" modelAttribute="equipmentUsage">
