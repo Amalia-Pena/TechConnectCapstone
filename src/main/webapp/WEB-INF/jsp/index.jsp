@@ -21,10 +21,10 @@
 <section class="section-a">
     <div class="containerForNav">
         <div class="sectiona-left">
-            <h1><h1>Welcome to the Workout Buddy!</h1></h1>
-            <p>
+            <h1>Welcome to the Workout Buddy!</h1>
+            <h3>
                 Let's get fit together!
-            </p>
+            </h3>
         </div>
         <img src="${pageContext.request.contextPath}/siteImages/homeImage1.jpg" alt="Loading-page-pic-one" />
     </div>
