@@ -60,7 +60,7 @@ public class JdbcSessionDao implements SessionDao {
 
     @Override
     public void resetGymSession() {
-        gymSession = null;
+        gymSession = new Gym_Session();
     }
 
     private class GymSessionRowMapper implements RowMapper {
