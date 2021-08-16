@@ -403,8 +403,19 @@ public class AccountController {
             throw new UnauthorizedException();
         }
     }
-   // @RequestMapping("gymMemberWorkoutMetricsList")
-   // public String gymMemberWorkoutList(@RequestParam double)
+
+    @RequestMapping( value = "/gymSessionEquipmentMetrics", method = RequestMethod.GET)
+    public String showEquipmentMetricsView(@RequestParam Long session_id) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            auth.getSession().setAttribute("gymSessionEquipmentUsageMapStrength",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"strength"));
+            auth.getSession().setAttribute("gymSessionEquipmentUsageMapCardio",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"cardio"));
+
+            return "memberWorkoutEquipmentMetric";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
+    }
 }
 
 
