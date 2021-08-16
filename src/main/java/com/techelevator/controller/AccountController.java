@@ -355,21 +355,6 @@ public class AccountController {
         modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
         return "EmployeeEquipmentMetric";
     }
-
-    @RequestMapping("memberWorkoutMetric")
-    public String showMemberWorkoutMetric() {
-        return "memberWorkoutMetric";
-    }
-
-    @RequestMapping("memberWorkoutMetricList")
-    public String searchMemberWorkoutList(@RequestParam String searchType, ModelMap modelHolder){
-        if(searchType.equals("searchAll")) {
-            List<Workout_Metric> memberWorkoutMetric = workoutMetricDao.getAllTimeSpentForMember(auth.getCurrentUser().getId());
-            modelHolder.put("getAllTimeSpentForMember", memberWorkoutMetric);
-        }
-        return "memberWorkoutMetric";
-    }
-
 }
 
 
