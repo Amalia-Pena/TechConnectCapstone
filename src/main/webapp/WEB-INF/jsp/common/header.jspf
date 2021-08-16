@@ -22,13 +22,21 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <c:url var="homeUrl" value="/"/>
-            <a href="${homeUrl}" class="navbar-brand"><img src="${pageContext.request.contextPath}/siteImages/logo.png" alt="logo-image" style="width: 50px;"></a>
+            <c:choose>
+                <c:when test="${not empty appCurrentUser}">
+                    <c:url var="homeUrl" value="/gymSession"/>
+                </c:when>
+                <c:otherwise>
+                    <c:url var="homeUrl" value="/"/>
+                </c:otherwise>
+            </c:choose>
+            <a href="${homeUrl}" class="navbar-brand"><img src="${pageContext.request.contextPath}/siteImages/logo.png"
+                                                           alt="logo-image" style="width: 50px;"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <c:url var="startWorkoutHomeUrl" value="/home"/>
-                <li><a href="${startWorkoutHomeUrl}">Home</a></li>
+
+                <li><a href="${homeUrl}">Home</a></li>
                 <c:if test="${not empty appCurrentUser}">
                     <c:if test="${appCurrentUser.role == 'admin'}">
                         <c:url var="addEmployeeUrl" value="/createEmployee"/>

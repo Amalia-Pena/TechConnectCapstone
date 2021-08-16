@@ -29,8 +29,8 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
         } catch (NullPointerException e) {
             return 0;
         }
-
     }
+
 
     private class GymSessionMetricRowMapper implements RowMapper {
         @Override
