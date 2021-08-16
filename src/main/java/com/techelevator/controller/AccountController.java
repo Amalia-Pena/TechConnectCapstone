@@ -81,7 +81,7 @@ public class AccountController {
             auth.getSession().setAttribute("strengthEquipmentList", equipmentDao.getAllCategoryEquipment("strength"));
             auth.getSession().setAttribute("cardioEquipmentList", equipmentDao.getAllCategoryEquipment("cardio"));
             auth.getSession().setAttribute("userEquipmentUsageList", new ArrayList<>());
-            return "redirect:home";
+            return "redirect:gymSession";
 
         } else {
             flash.addFlashAttribute("message", "Login Invalid");
@@ -183,15 +183,41 @@ public class AccountController {
             if (!map.containsAttribute("user")) {
                 map.put("user", new User());
             }
-            map.put("user", auth.getCurrentUser());
-            sessionDao.checkIn(auth.getCurrentUser().getId());
-            auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
             return "loggedInHome";
         } else {
             throw new UnauthorizedException();
         }
     }
 
+    @RequestMapping(path = "/startGymSession", method = RequestMethod.GET)
+    public String startGymSession(ModelMap map) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            if (!map.containsAttribute("user")) {
+                map.put("user", new User());
+            }
+            map.put("user", auth.getCurrentUser());
+            sessionDao.checkIn(auth.getCurrentUser().getId());
+            auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
+            return "equipmentSelection";
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping(path = "/endGymSession", method = RequestMethod.POST)
+    public String endGymSessionCheckOut(ModelMap map) {
+
+        sessionDao.checkOut(auth.getCurrentUser().getId());
+        List<EquipmentUsage> equipmentUsageList = (List<EquipmentUsage>) auth.getSession().getAttribute("userEquipmentUsageList");
+        for (int i = 0; i < equipmentUsageList.size(); i++) {
+            equipmentUsageList.get(i).setSession_id(sessionDao.getGymSession().getSession_id());
+            equipmentUsageDao.logEquipmentUsage(equipmentUsageList.get(i));
+        }
+        sessionDao.resetGymSession();
+        auth.getSession().setAttribute("gymSession", null);
+        auth.getSession().setAttribute("userEquipmentUsageList", new ArrayList<>());
+        return "redirect:gymSession";
+    }
 
     @RequestMapping(path = "/editProfile", method = RequestMethod.GET)
     public String showEditProfilePage(ModelMap modelHolder) throws UnauthorizedException {
@@ -267,21 +293,7 @@ public class AccountController {
     }
 
 
-    @RequestMapping(path = "/gymSession", method = RequestMethod.POST)
-    public String showGymSessionCheckOut(ModelMap map) {
 
-        sessionDao.checkOut(auth.getCurrentUser().getId());
-        List<EquipmentUsage> equipmentUsageList = (List<EquipmentUsage>) auth.getSession().getAttribute("userEquipmentUsageList");
-        for (int i = 0; i < equipmentUsageList.size(); i++) {
-            equipmentUsageList.get(i).setSession_id(sessionDao.getGymSession().getSession_id());
-            equipmentUsageDao.logEquipmentUsage(equipmentUsageList.get(i));
-        }
-        sessionDao.resetGymSession();
-        auth.getSession().setAttribute("gymSession", sessionDao.getGymSession().getCheck_in());
-        List<EquipmentUsage> list = new ArrayList<>();
-        auth.getSession().setAttribute("userEquipmentUsageList", list);
-        return "redirect:home";
-    }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public String showLogInHomePage(ModelMap modelHolder, HttpSession session) throws UnauthorizedException {
