@@ -381,6 +381,18 @@ public class AccountController {
         return workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId());
     }
 
+    @RequestMapping( value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
+    public String getWorkoutMetricView() throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(auth.getCurrentUser().getId()));
+            return "memberWorkoutMetric";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
+    }
+   // @RequestMapping("gymMemberWorkoutMetricsList")
+   // public String gymMemberWorkoutList(@RequestParam double)
 }
 
 
