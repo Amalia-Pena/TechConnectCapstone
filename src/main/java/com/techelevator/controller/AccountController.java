@@ -7,6 +7,7 @@ import com.techelevator.dao.*;
 import com.techelevator.dao.ExerciseClassDao;
 import com.techelevator.model.*;
 import org.apache.commons.io.FileUtils;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,8 @@ public class AccountController {
     private EquipmentUsageDao equipmentUsageDao;
     @Autowired
     private EquipmentMetricDao equipmentMetricDao;
+    @Autowired
+    private WorkoutMetricDao workoutMetricDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -351,6 +354,20 @@ public class AccountController {
         List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
         modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
         return "EmployeeEquipmentMetric";
+    }
+
+    @RequestMapping("memberWorkoutMetric")
+    public String showMemberWorkoutMetric() {
+        return "memberWorkoutMetric";
+    }
+
+    @RequestMapping("memberWorkoutMetricList")
+    public String searchMemberWorkoutList(@RequestParam String searchType, ModelMap modelHolder){
+        if(searchType.equals("searchAll")) {
+            List<Workout_Metric> memberWorkoutMetric = workoutMetricDao.getAllTimeSpentForMember(auth.getCurrentUser().getId());
+            modelHolder.put("getAllTimeSpentForMember", memberWorkoutMetric);
+        }
+        return "memberWorkoutMetric";
     }
 
 }
