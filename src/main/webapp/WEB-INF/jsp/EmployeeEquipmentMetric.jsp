@@ -6,7 +6,7 @@
 <h1>Machine Metrics</h1>
 <c:url var = "employeeMetricUrl" value="/employeeEquipmentMetricList"/>
 <form method = "GET" action = "${employeeMetricUrl}">
-  <label for="check_in"> Check In:</label>
+  <label for="check_in"> Check In Month:</label>
   <select name = "check_in" id="check_in">
     <option value = 1> January</option>
     <option value = 2> February</option>
@@ -22,7 +22,7 @@
     <option value = 12> December</option>
   </select>
 
-  <label for="check_out"> Check Out:</label>
+  <label for="check_out"> Check Out Month:</label>
   <select name = "check_out" id="check_out">
     <option value = 1> January</option>
     <option value = 2> February</option>
