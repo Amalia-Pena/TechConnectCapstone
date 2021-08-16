@@ -1,6 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="common/header.jspf" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:url var="profileUrl" value="/profile"/>
 <c:url var="profileImg" value="/profile/image?userName=${user.username}"/>
 <html>

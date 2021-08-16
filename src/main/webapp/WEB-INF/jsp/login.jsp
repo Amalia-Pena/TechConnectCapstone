@@ -1,5 +1,5 @@
 <%@ include file = "common/header.jspf" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:url var="loginUrl" value="/login"/>
 
 <!DOCTYPE html>

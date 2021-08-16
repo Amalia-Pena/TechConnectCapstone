@@ -1,22 +1,110 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="common/header.jspf" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<h1>Welcome to the site!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="it=edge">
+    <script src="https://kit.fontawesome.com/2745819f47.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Catamaran&display=swap" rel="stylesheet">
+    <link href="<c:url value="/css/index.css"/>" rel="stylesheet" type="text/css" />
+    <title>Workout Buddy</title>
+    <c:url var="loginUrl" value="/login"/>
+    <c:url var="registerUrl" value="/register"/>
+</head>
+<body id="home">
 
-<c:url var="gymSessionUrl" value="/gymSession"/>
-<c:url var="equipmentLogUrl" value="/equipmentSelection"/>
-<c:if test="${gymSession == null}">
-    <form:form action="${equipmentLogUrl}" method="GET" modelAttribute="user">
-        <button type="submit" class="btn btn-default">Start Workout</button>
-    </form:form>
-</c:if>
+<section class="section-a">
+    <div class="containerForNav">
+        <div class="sectiona-left">
+            <h1>Welcome Back ${user.firstName}!</h1>
+            <h3>
+                Let's get fit together!
+            </h3>
+        </div>
+        <img src="${pageContext.request.contextPath}/siteImages/homeImage1.jpg" alt="Loading-page-pic-one" />
+    </div>
+</section>
+
+<section class="boxes">
+    <c:url var="gymSessionUrl" value="/gymSession"/>
+    <c:url var="equipmentLogUrl" value="/equipmentSelection"/>
+    <c:if test="${gymSession == null}">
+        <form:form action="${equipmentLogUrl}" method="GET" modelAttribute="user">
+            <a href="${equipmentLogUrl}">
+                <div class="box">
+                    <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
+                    <h3>Start workout</h3>
+                    <p>Choose a gym equipment to start!</p>
+                </div>
+            </a>
+        </form:form>
+    </c:if>
 
 
-<c:if test="${gymSession != null}">
-    <form:form action="${gymSessionUrl}" method="POST" modelAttribute="user">
-        <button type="submit" class="btn btn-default">End Workout</button>
-    </form:form>
-</c:if>
+    <c:if test="${gymSession != null}">
+        <form:form action="${gymSessionUrl}" method="POST" modelAttribute="user">
+            <a href="${gymSessionUrl}">
+                <div class="box">
+                    <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
+                    <h3>Gym Sessions</h3>
+                </div>
+            </a>
+        </form:form>
+    </c:if>
+</section>
 
+<section id="about" class="section-b">
+    <div class="overlay">
+        <div class="section-b-inner py-5">
+            <h3 class="text-2">Workout Buddy</h3>
+            <h2 class="text-5 mt-1">Best workout companion fitness has to offer</h2>
+            <p class="mt-1">
+                "Good things comes to those who sweat"
+                <br>
+                - Unknown
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.sr = ScrollReveal();
+    sr.reveal('.navbar', {
+        duration: 2000,
+        origin:'bottom'
+    });
+    sr.reveal('.sectiona-left', {
+        duration: 2000,
+        origin:'bottom',
+        distance:'300px'
+    });
+    sr.reveal('.btn', {
+        duration: 2000,
+        origin:'top',
+        delay: 1500
+    });
+    sr.reveal('.menu-wrap', {
+        duration: 2000,
+        origin:'left'
+    });
+    sr.reveal('.overlay', {
+        duration: 2000,
+        origin:'bottom',
+        delay: 1000
+    });
+    sr.reveal('.box', {
+        duration: 2000,
+        origin:'bottom',
+        distance:'300px',
+        delay: 2000
+    });
+</script>
+</body>
+</html>
 
 <%@ include file="common/footer.jspf" %>
