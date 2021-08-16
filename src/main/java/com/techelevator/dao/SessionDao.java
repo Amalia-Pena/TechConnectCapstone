@@ -9,7 +9,12 @@ import java.util.List;
 public interface SessionDao {
 
     public void checkIn(Long user_id);
+
     public void checkOut(Long user_id);
+
     public Gym_Session getGymSession();
+
     public void resetGymSession();
+
+    public List<Gym_Session> getAllGymSessions(Long user_id);
 }

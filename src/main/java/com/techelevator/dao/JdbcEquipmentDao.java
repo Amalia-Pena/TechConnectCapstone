@@ -3,6 +3,7 @@ package com.techelevator.dao;
 import com.techelevator.authentication.PasswordHasher;
 import com.techelevator.model.Assistance_Media;
 import com.techelevator.model.Equipment;
+import com.techelevator.model.EquipmentUsage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class JdbcEquipmentDao implements EquipmentDao{
@@ -48,15 +52,29 @@ public class JdbcEquipmentDao implements EquipmentDao{
         String sql = "select * from equipment join equipment_categories on equipment.category_id = equipment_categories.category_id where equipment_categories.name = ? ;";
         try {
             return (List<Equipment>) jdbcTemplate.query(sql, new EquipmentRowMapper(), category_name);
-        }catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-
-
-
-
+    @Override
+    public Map<String, EquipmentUsage> getEquipmentUsageList(List<EquipmentUsage> equipmentUsageList, String category) {
+        String sql = "select * from equipment join equipment_categories on equipment.category_id = equipment_categories.category_id where equipment_categories.name = ? ;";
+        Map<String, EquipmentUsage> output = new HashMap<>();
+        try {
+            List<Equipment> equipmentList = (List<Equipment>) jdbcTemplate.query(sql, new EquipmentRowMapper(), category);
+            for (int i = 0; i < equipmentList.size(); i++) {
+                for (int j = 0; j < equipmentUsageList.size(); j++) {
+                    if (equipmentList.get(i).getEquipment_id() == equipmentUsageList.get(j).getEquipment_id()) {
+                        output.put(equipmentList.get(i).getName(), equipmentUsageList.get(j));
+                    }
+                }
+            }
+            return output;
+        } catch (EmptyResultDataAccessException e) {
+            return new HashMap<>();
+        }
+    }
 
     private class EquipmentRowMapper implements RowMapper {
         @Override

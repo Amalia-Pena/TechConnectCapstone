@@ -27,12 +27,14 @@ public class JdbcSessionDao implements SessionDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Override
     public void checkIn(Long user_id) {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         gymSession.setCheck_in(ts);
         gymSession.setUser_id(user_id);
     }
 
+    @Override
     public void checkOut(Long user_id) {
         String sqlInsert = "INSERT into gym_session (user_id, check_in, check_out) VALUES (?, ?, ?);";
         Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -45,10 +47,18 @@ public class JdbcSessionDao implements SessionDao {
 
     }
 
+    @Override
     public Gym_Session getGymSession() {
         return gymSession;
     }
 
+    @Override
+    public List<Gym_Session> getAllGymSessions(Long user_id) {
+        String sql = "SELECT * FROM gym_session WHERE user_id = ?;";
+        return (List<Gym_Session>) jdbcTemplate.queryForObject(sql, new GymSessionRowMapper(), user_id);
+    }
+
+    @Override
     public void resetGymSession() {
         gymSession = new Gym_Session();
     }

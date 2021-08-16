@@ -58,6 +58,8 @@ public class AccountController {
     private EquipmentUsageDao equipmentUsageDao;
     @Autowired
     private EquipmentMetricDao equipmentMetricDao;
+    @Autowired
+    private WorkoutMetricDao workoutMetricDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -347,10 +349,20 @@ public class AccountController {
     }
 
     @RequestMapping("employeeEquipmentMetricList")
-    public String searchEmployeeEquipmentList(@RequestParam double check_in, @RequestParam double check_out, ModelMap modelHolder){
+    public String searchEmployeeEquipmentList(@RequestParam double check_in, @RequestParam double check_out, ModelMap modelHolder) {
         List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
         modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
         return "EmployeeEquipmentMetric";
+    }
+
+    @RequestMapping("/gymMemberVisitMetrics")
+    public String getVisitMetricSelectionPage(HttpServletRequest request, ModelMap map) {
+        map.put("allTimeMetric", getGymMetric());
+        return "GymMemberViewVisitMetrics";
+    }
+
+    public int getGymMetric() {
+        return workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId());
     }
 
 }
