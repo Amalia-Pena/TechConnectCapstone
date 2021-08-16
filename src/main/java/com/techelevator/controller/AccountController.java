@@ -58,6 +58,8 @@ public class AccountController {
     private EquipmentUsageDao equipmentUsageDao;
     @Autowired
     private EquipmentMetricDao equipmentMetricDao;
+    @Autowired
+    private WorkoutMetricDao workoutMetricDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -366,6 +368,16 @@ public class AccountController {
         else {
             throw new UnauthorizedException();
         }
+    }
+
+    @RequestMapping("/gymMemberVisitMetrics")
+    public String getVisitMetricSelectionPage(HttpServletRequest request, ModelMap map) {
+        map.put("allTimeMetric", getGymMetric());
+        return "GymMemberViewVisitMetrics";
+    }
+
+    public int getGymMetric() {
+        return workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId());
     }
 
 }

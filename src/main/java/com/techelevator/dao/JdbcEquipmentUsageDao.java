@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -21,11 +22,22 @@ public class JdbcEquipmentUsageDao implements EquipmentUsageDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Override
     public void logEquipmentUsage(EquipmentUsage equipmentUsage) {
         String sql = "insert into equipment_usage (equipment_id, session_id, reps, weight_per_rep, distance, check_in, check_out) values (?,?,?,?,?,?,?);";
         jdbcTemplate.update(sql, equipmentUsage.getEquipment_id(), equipmentUsage.getSession_id(), equipmentUsage.getReps(), equipmentUsage.getWeight_per_rep(), equipmentUsage.getDistance(), equipmentUsage.getCheck_in(), equipmentUsage.getCheck_out());
-
     }
+
+    @Override
+    public List<EquipmentUsage> getGymSessionEquipmentUsage(Long session_id) {
+        String sql = "SELECT * FROM equipment_usage WHERE session_id = ?;";
+        try {
+            return (List<EquipmentUsage>) jdbcTemplate.queryForObject(sql, new EquipmentRowMapper(), session_id);
+        } catch (NullPointerException e) {
+            return new ArrayList<>();
+        }
+    }
+
 
     private class EquipmentRowMapper implements RowMapper {
         @Override

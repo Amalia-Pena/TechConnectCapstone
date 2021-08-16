@@ -161,3 +161,54 @@ WHERE app_user.user_id = ?
   AND DATE(equipment_usage.check_out) <= ?
   AND equipment.equipment_id = ?
 GROUP BY equipment.name;
+
+-------------------------------------------------------------------------------------------------------
+-- Views for Gym member visits
+-----------------------------------------------------------------------------------------------------
+-- View for how long gym visit total
+SELECT SUM(check_out - check_in) AS total_gym_time
+FROM gym_session
+         JOIN app_user ON gym_session.user_id = app_user.user_id
+WHERE app_user.user_id = ?;
+
+-- View total equipment use per year
+SELECT SUM(check_out - check_in) AS total_gym_time
+FROM gym_session
+         JOIN app_user ON gym_session.user_id = app_user.user_id
+WHERE app_user.user_id = ?
+  AND EXTRACT(YEAR FROM check_out) = ?;
+
+-- View total equipment use per month
+SELECT SUM(check_out - check_in) AS total_gym_time
+FROM gym_session
+         JOIN app_user ON gym_session.user_id = app_user.user_id
+WHERE app_user.user_id = ?
+  AND EXTRACT(MONTH FROM check_in) = ?
+  AND EXTRACT(MONTH FROM check_out) = ?;
+
+-- View total equipment use per week
+SELECT SUM(check_out - check_in) AS total_gym_time
+FROM gym_session
+         JOIN app_user ON gym_session.user_id = app_user.user_id
+WHERE app_user.user_id = ?
+  AND date(check_in) >= ?
+  AND date(check_out) <= ?;
+
+-- View total equipment use per day
+SELECT SUM(check_out - check_in) AS total_gym_time
+FROM gym_session
+         JOIN app_user ON gym_session.user_id = app_user.user_id
+WHERE app_user.user_id = ?
+  AND EXTRACT(dow FROM check_in) = ?
+  AND EXTRACT(dow FROM check_out) = ?
+  AND DATE(check_in) >= ?
+  AND DATE(check_out) <= ?;
+
+-- View for average visit duration
+SELECT AVG(check_out - check_in) AS average_gym_time
+FROM gym_session
+         JOIN app_user ON gym_session.user_id = app_user.user_id
+WHERE app_user.user_id = ?;
+
+
+
