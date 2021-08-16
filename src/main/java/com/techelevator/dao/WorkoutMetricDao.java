@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface WorkoutMetricDao {
 
+    int getMemberTotalGymTime(Long user_id);
 }
-
-

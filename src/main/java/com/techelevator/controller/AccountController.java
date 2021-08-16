@@ -370,6 +370,17 @@ public class AccountController {
             throw new UnauthorizedException();
         }
     }
+
+    @RequestMapping("/gymMemberVisitMetrics")
+    public String getVisitMetricSelectionPage(HttpServletRequest request, ModelMap map) {
+        map.put("allTimeMetric", getGymMetric());
+        return "GymMemberViewVisitMetrics";
+    }
+
+    public int getGymMetric() {
+        return workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId());
+    }
+
 }
 
 
