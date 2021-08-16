@@ -26,16 +26,16 @@
                 Let's get fit together!
             </h3>
         </div>
-        <img src="${pageContext.request.contextPath}/siteImages/homeImage1.jpg" alt="Loading-page-pic-one" />
+        <img src="${pageContext.request.contextPath}/siteImages/homeImage1.jpg" alt="Loading-page-pic-one"/>
     </div>
 </section>
 
 <section class="boxes">
-    <c:url var="gymSessionUrl" value="/gymSession"/>
-    <c:url var="equipmentLogUrl" value="/equipmentSelection"/>
+    <c:url var="endGymSessionUrl" value="/endGymSession"/>
+    <c:url var="startGymSessionUrl" value="/startGymSession"/>
     <c:if test="${gymSession == null}">
-        <form:form action="${equipmentLogUrl}" method="GET" modelAttribute="user">
-            <a href="${equipmentLogUrl}">
+        <form:form action="${startGymSessionUrl}" method="GET">
+            <a href="${startGymSessionUrl}">
                 <div class="box">
                     <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
                     <h3>Start workout</h3>
@@ -47,12 +47,12 @@
 
 
     <c:if test="${gymSession != null}">
-        <form:form action="${gymSessionUrl}" method="POST" modelAttribute="user">
-            <a href="${gymSessionUrl}">
-                <div class="box">
-                    <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
-                    <h3>Gym Sessions</h3>
-                </div>
+        <form:form action="${endGymSessionUrl}" method="post">
+
+            <div class="box">
+                <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
+                <button type="submit" class="btn btn-default">End Workout</button>
+            </div>
             </a>
         </form:form>
     </c:if>
