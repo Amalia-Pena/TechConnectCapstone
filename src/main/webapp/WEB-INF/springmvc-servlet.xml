@@ -24,6 +24,7 @@
     <!-- ********************** -->
 
 	<mvc:annotation-driven />
+
 	<mvc:resources mapping="/**" location="/css">
 		<mvc:cache-control max-age="0" cache-public="true"/>
 	</mvc:resources>
