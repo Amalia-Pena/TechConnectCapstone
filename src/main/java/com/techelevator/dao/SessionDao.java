@@ -17,4 +17,5 @@ public interface SessionDao {
     public void resetGymSession();
 
     public List<Gym_Session> getAllGymSessions(Long user_id);
+
 }
