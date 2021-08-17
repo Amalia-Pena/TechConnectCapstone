@@ -40,6 +40,7 @@
         <br><br>
         <input type="submit" value="Check In">
     </form>
+        
     </div>
 </body>
 </html>

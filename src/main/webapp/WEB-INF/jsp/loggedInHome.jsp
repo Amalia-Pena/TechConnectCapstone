@@ -71,16 +71,25 @@
 
     </c:if>
 
-
     <c:if test="${gymSession != null}">
-        <form:form action="${endGymSessionUrl}" method="post">
-        <button type="submit" class="btn btn-default">
+        <form:form action="${endGymSessionUrl}" method="post" cssStyle="text-align: center;">
+            <button type="submit" class="btn btn-default">
                 <div class="box-end-workout">
-                    <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
+                    <i class="far fa-stop-circle fa-4x" style="margin-bottom: 1rem"></i>
                     <br/>
-                    End Workout
+                    <h3>Finish Workout</h3>
                 </div>
-        </button>
+            </button>
+        </form:form>
+
+        <form:form action="${startGymSessionUrl}" method="GET" cssStyle="text-align: center;">
+            <button type="submit" class="btn btn-default">
+                <div class="box-end-workout">
+                    <i class="far fa-play-circle fa-4x" style="margin-bottom: 1rem"></i>
+                    <br/>
+                    <h3>Resume Workout</h3>
+                </div>
+            </button>
         </form:form>
     </c:if>
 </section>
