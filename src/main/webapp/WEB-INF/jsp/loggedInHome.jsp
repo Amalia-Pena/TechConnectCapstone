@@ -73,12 +73,13 @@
 
     <c:if test="${gymSession != null}">
         <form:form action="${endGymSessionUrl}" method="post">
-
-            <div class="box">
-                <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
-                <button type="submit" class="btn btn-default">End Workout</button>
-            </div>
-            </a>
+        <button type="submit" class="btn btn-default">
+                <div class="box-end-workout">
+                    <i class="fas fa-dumbbell fa-4x" style="margin-bottom: 1rem"></i>
+                    <br/>
+                    End Workout
+                </div>
+        </button>
         </form:form>
     </c:if>
 </section>

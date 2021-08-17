@@ -8,8 +8,8 @@
     <meta charset="utf-8">
     <title>Log Strength Equipment Use</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="<c:url value="/css/registrationForm.css"/>" rel="stylesheet" type="text/css"/>
+    <script src="https://kit.fontawesome.com/2745819f47.js" crossorigin="anonymous"></script>
+    <link href="<c:url value="/css/logEquipmentUse.css"/>" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -41,14 +41,21 @@
                 <button type="submit" class="btn btn-default">Check out</button>
             </div>
         </form:form>
-        <div>
-            <c:url var="equipmentUrl" value="/GymEquipmentHelp?equipment_id=${equipmentSelection}"/>
-            <a href="${equipmentUrl}">Get Help With ${equipment.name} Equipment</a>
-        </div>
     </div>
+    <section class="boxes">
+        <c:url var="equipmentUrl" value="/GymEquipmentHelp?equipment_id=${equipmentSelection}"/>
+        <a href="${equipmentUrl}">
+            <div class="box">
+                <i class="fas fa-info-circle fa-4x" style="margin-bottom: 1rem"></i>
+                <br>
+                <h4>Get Help With ${equipment.name} Equipment</h4>
+            </div>
+        </a>
+    </section>
 </div>
 
 </body>
 </html>
+
 
 <%@ include file="common/footer.jspf" %>
