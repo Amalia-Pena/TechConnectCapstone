@@ -32,6 +32,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -384,19 +385,32 @@ public class AccountController {
     }
 
     @RequestMapping("/gymMemberVisitMetrics")
-    public String getVisitMetricSelectionPage(HttpServletRequest request, ModelMap map) {
-        map.put("allTimeMetric", getGymMetric());
+    public String getVisitMetricSelectionPage(@RequestParam(required = false) String user_id, @RequestParam(required = false) String start_date, @RequestParam(required = false) String end_date, ModelMap map) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        map.put("allTimeMetric", workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId()).getTotalGymTime());
+        if (start_date != null && end_date != null) {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), LocalDate.parse(start_date, formatter), LocalDate.parse(end_date, formatter)));
+
+        } else if (start_date != null) {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), LocalDate.parse(start_date, formatter), null));
+        } else if (end_date != null) {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), null, LocalDate.parse(end_date, formatter)));
+        } else {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), null, null));
+
+        }
         return "GymMemberViewVisitMetrics";
     }
 
-    public int getGymMetric() {
-        return workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId());
-    }
-
-    @RequestMapping( value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
-    public String getWorkoutMetricView() throws UnauthorizedException {
+    @RequestMapping(value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
+    public String getWorkoutMetricView(@RequestParam(required = false) String user_id) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
-            auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(auth.getCurrentUser().getId()));
+            if (user_id != null) {
+                auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(Long.valueOf(user_id)));
+            } else {
+                auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(auth.getCurrentUser().getId()));
+            }
+            auth.getSession().setAttribute("allUsersList", userDao.getAllUsers());
             return "memberWorkoutMetric";
         }
         else {
@@ -407,15 +421,20 @@ public class AccountController {
     @RequestMapping( value = "/gymSessionEquipmentMetrics", method = RequestMethod.GET)
     public String showEquipmentMetricsView(@RequestParam Long session_id) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
-            auth.getSession().setAttribute("gymSessionEquipmentUsageMapStrength",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"strength"));
-            auth.getSession().setAttribute("gymSessionEquipmentUsageMapCardio",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"cardio"));
+            auth.getSession().setAttribute("gymSessionEquipmentUsageMapStrength", equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id), "strength"));
+            auth.getSession().setAttribute("gymSessionEquipmentUsageMapCardio", equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id), "cardio"));
 
             return "memberWorkoutEquipmentMetric";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
     }
+
+    @RequestMapping(value = "/showTest", method = RequestMethod.GET)
+    public String showTest() throws UnauthorizedException {
+        return "test";
+    }
+
 }
 
 

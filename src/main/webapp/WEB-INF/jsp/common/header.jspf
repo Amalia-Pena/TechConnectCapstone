@@ -51,6 +51,8 @@
                     <li><a href="${equipmentSelectionUrl}">Equipment Selection</a></li>
                     <c:url var="exerciseClassesUrl" value="/exerciseClasses"/>
                     <li><a href="${exerciseClassesUrl}">Exercise Classes</a></li>
+                    <c:url var="memberWorkoutMetrics" value="/gymMemberWorkoutMetrics"/>
+                    <li><a href="${memberWorkoutMetrics}">Workout Metrics</a></li>
                 </c:if>
             </ul>
             <ul class="nav navbar-nav navbar-right">

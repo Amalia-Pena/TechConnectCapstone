@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -22,22 +23,59 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
     }
 
     @Override
-    public int getMemberTotalGymTime(Long user_id) {
-        String sql = "SELECT SUM(check_out - check_in) AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ?;";
+    public Workout_Metric getMemberTotalGymTime(Long user_id) {
+        String sql = "SELECT extract(epoch from sum(check_out - check_in))/86400 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ?;";
         try {
-            return (int) jdbcTemplate.queryForObject(sql, new GymSessionMetricRowMapper(), user_id);
+            return (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id);
+
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public int getMemberAverageGymTime(Long user_id, LocalDate start, LocalDate end) {
+        try {
+
+            if (start != null && end != null) {
+                String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= ? AND DATE(check_in) <= ?;";
+                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, start, end);
+            } else if (start != null) {
+                String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= ?;";
+                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, start);
+            } else if (end != null) {
+                String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) <= ?;";
+                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, end);
+            } else {
+                String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ?;";
+                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id);
+            }
         } catch (NullPointerException e) {
             return 0;
         }
     }
 
 
-    private class GymSessionMetricRowMapper implements RowMapper {
+    private class GymSessionTotalMetricRowMapper implements RowMapper {
         @Override
         public Workout_Metric mapRow(ResultSet results, int i) {
             try {
                 Workout_Metric workout_metric = new Workout_Metric();
-                workout_metric.setTotalGymTime(results.getInt("total_gym_time"));
+                workout_metric.setTotalGymTime(results.getDouble("total_gym_time"));
+                return workout_metric;
+
+            } catch (SQLException e) {
+                return null;
+            }
+        }
+    }
+
+    private class GymSessionAverageMetricRowMapper implements RowMapper {
+        @Override
+        public Workout_Metric mapRow(ResultSet results, int i) {
+            try {
+                Workout_Metric workout_metric = new Workout_Metric();
+                workout_metric.setAverageGymTime(results.getInt("average_gym_time"));
                 return workout_metric;
 
             } catch (SQLException e) {
