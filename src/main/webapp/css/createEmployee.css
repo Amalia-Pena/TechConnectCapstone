@@ -93,8 +93,7 @@ select option[value=""][disabled] {
 
 button {
     border: none;
-    width: 152px;
-    height: 40px;
+    height: 33px;
     margin: auto;
     margin-top: 29px;
     cursor: pointer;
@@ -105,7 +104,6 @@ button {
     background: aqua;
     font-size: 13px;
     color: #fff;
-    text-transform: uppercase;
     border-radius: 20px;
     overflow: hidden;
     -webkit-transform: perspective(1px) translateZ(0);
@@ -135,11 +133,11 @@ button:before {
     transition-duration: 0.5s;
     -webkit-transition-timing-function: ease-out;
     transition-timing-function: ease-out; }
-button:hover:before {
+/*button:hover:before {
     -webkit-transform: scaleX(1);
     transform: scaleX(1);
     -webkit-transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
-    transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66); }
+    transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66); } */
 
 .main-header{
     color: darkgrey;
