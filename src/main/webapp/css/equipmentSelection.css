@@ -41,5 +41,23 @@
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 body{
-    background: url("../siteImages/equipmentSelection.jpg") !important;
+    background: url("../siteImages/equipmentSelection.jpg") no-repeat center center fixed !important;
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    -o-background-size: cover !important;
+    background-size: cover !important;
+}
+#nest {
+    background-color: gray !important;
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+
+h1{
+    text-align: center;
+    padding-bottom: 50px;
 }

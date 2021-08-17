@@ -38,10 +38,6 @@
 
                 <li><a href="${homeUrl}">Home</a></li>
                 <c:if test="${not empty appCurrentUser}">
-                    <c:if test="${appCurrentUser.role == 'admin'}">
-                        <c:url var="addEmployeeUrl" value="/createEmployee"/>
-                        <li><a href="${addEmployeeUrl}">Add Employee</a></li>
-                    </c:if>
 
                     <c:if test="${appCurrentUser.role == 'user'|| appCurrentUser.role == 'admin'}">
                         <c:url var="viewProfile" value="/profile"/>
@@ -51,10 +47,6 @@
                     <c:url var="exerciseClassesUrl" value="/exerciseClasses"/>
                     <li><a href="${exerciseClassesUrl}">Exercise Classes</a></li>
 
-                    <c:if test="${appCurrentUser.role == 'employee'|| appCurrentUser.role == 'admin'}">
-                        <c:url var="employeeEquipmentMetricUrl" value="/employeeEquipmentMetric"/>
-                        <li><a href="${employeeEquipmentMetricUrl}">View Equipment Metrics</a></li>
-                    </c:if>
                 </c:if>
             </ul>
             <ul class="nav navbar-nav navbar-right">

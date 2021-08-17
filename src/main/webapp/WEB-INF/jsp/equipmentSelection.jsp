@@ -9,15 +9,17 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="../../css/equipmentSelection.css" rel="stylesheet" type="text/css" />
+    <link href="<c:url value="/css/equipmentSelection.css"/>" rel="stylesheet" type="text/css" />
     <title>Equipment Selection</title>
 </head>
 <body style="background: url(/siteImages/equipmentSelection.jpg) no-repeat;
     background-size: cover;">
-    <h1>Welcome to the Equipment Selection Page</h1>
+    <h1>Equipment Selection</h1>
+
+    <div id = "nest">
 
     <form action="${logEquipmentUrl}" method="GET" modelAttribute="equipmentUsage">
-        <label for="equipmentSelect">Please choose a </label>
+        <label for="equipmentSelect">Please select your equipment: </label>
         <select name="equipmentSelect" id="equipmentSelect">
             <optgroup label="Strength Equipment">
                 <c:forEach var="equipment" items="${strengthEquipmentList}">
@@ -37,6 +39,7 @@
         <br><br>
         <input type="submit" value="Check In">
     </form>
+    </div>
 </body>
 </html>
 

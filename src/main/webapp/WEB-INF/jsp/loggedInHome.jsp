@@ -15,6 +15,7 @@
     <title>Workout Buddy</title>
     <c:url var="loginUrl" value="/login"/>
     <c:url var="registerUrl" value="/register"/>
+    <c:url var="adminMetricsUrl" value="/adminMetrics"/>
 </head>
 <body id="home">
 
@@ -43,6 +44,30 @@
                 </div>
             </a>
         </form:form>
+        <form:form action = "${adminMetricsUrl}" method="get">
+            <a href = "${adminMetricsUrl}">
+                <div class="box">
+                    <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
+                    <h3>Your Metrics</h3>
+                    <p>Click to see your equipment metrics</p>
+                </div>
+
+            </a>
+        </form:form>
+
+        <c:if test="${appCurrentUser.role == 'admin' || appCurrentUser.role == 'employee'}">
+            <form:form action = "${adminMetricsUrl}" method="get">
+                <a href = "${adminMetricsUrl}">
+                    <div class="box">
+                        <i class="fas fa-user-lock fa-4x" style="margin-bottom: 1rem"></i>
+                        <h3>Administration</h3>
+                        <p>Gym Administration</p>
+                    </div>
+
+                </a>
+            </form:form>
+        </c:if>
+
     </c:if>
 
 
@@ -57,6 +82,8 @@
         </form:form>
     </c:if>
 </section>
+
+
 
 <section id="about" class="section-b">
     <div class="overlay">
