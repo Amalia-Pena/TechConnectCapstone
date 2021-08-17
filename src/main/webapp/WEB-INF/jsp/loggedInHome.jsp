@@ -16,6 +16,7 @@
     <c:url var="loginUrl" value="/login"/>
     <c:url var="registerUrl" value="/register"/>
     <c:url var="adminMetricsUrl" value="/adminMetrics"/>
+    <c:url var = "gymMemberWorkoutMetricsUrl" value="/gymMemberWorkoutMetrics"/>
 </head>
 <body id="home">
 
@@ -44,8 +45,8 @@
                 </div>
             </a>
         </form:form>
-        <form:form action = "${adminMetricsUrl}" method="get">
-            <a href = "${adminMetricsUrl}">
+        <form:form action = "${gymMemberWorkoutMetricsUrl}" method="get">
+            <a href = "${gymMemberWorkoutMetricsUrl}">
                 <div class="box">
                     <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
                     <h3>Your Metrics</h3>
