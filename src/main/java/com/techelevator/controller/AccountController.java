@@ -363,7 +363,7 @@ public class AccountController {
 
     @RequestMapping("employeeEquipmentMetric")
     public String showEmployeeEquipmentMetric() throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+        if (auth.userHasRole(new String[]{"admin", "employee"})) {
             return "EmployeeEquipmentMetric";
         }
         else {
@@ -373,7 +373,7 @@ public class AccountController {
 
     @RequestMapping("employeeEquipmentMetricList")
     public String searchEmployeeEquipmentList(@RequestParam double check_in, @RequestParam double check_out, ModelMap modelHolder) throws UnauthorizedException {
-        if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+        if (auth.userHasRole(new String[]{"admin", "employee"})) {
             List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
             modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
             return "EmployeeEquipmentMetric";
@@ -416,7 +416,20 @@ public class AccountController {
             throw new UnauthorizedException();
         }
     }
+
+
+    @RequestMapping("adminMetrics")
+    public String showAdminMetrics() throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "employee"})) {
+            return "adminMetrics";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
+    }
 }
+
+
 
 
 

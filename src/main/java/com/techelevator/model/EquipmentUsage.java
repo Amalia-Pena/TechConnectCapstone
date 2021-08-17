@@ -16,11 +16,11 @@ public class EquipmentUsage {
     private Long session_id;
 
     @NotNull(message = "Cannot be blank")
-    @Min(value = 1, message = "Do you even lift bro????")
+    @Min(value = 0, message = "Do you even lift bro????")
     private int reps;
 
     @NotNull(message = "Cannot be blank")
-    @Min(value = 1, message = "Do you even lift bro????")
+    @Min(value = 0, message = "Do you even lift bro????")
     private int weight_per_rep;
 
     @NotNull
