@@ -55,12 +55,12 @@ public class JdbcSessionDao implements SessionDao {
     @Override
     public List<Gym_Session> getAllGymSessions(Long user_id) {
         String sql = "SELECT * FROM gym_session WHERE user_id = ?;";
-        return (List<Gym_Session>) jdbcTemplate.queryForObject(sql, new GymSessionRowMapper(), user_id);
+        return (List<Gym_Session>) jdbcTemplate.query(sql, new GymSessionRowMapper(), user_id);
     }
 
     @Override
     public void resetGymSession() {
-        gymSession = null;
+        gymSession = new Gym_Session();
     }
 
     private class GymSessionRowMapper implements RowMapper {

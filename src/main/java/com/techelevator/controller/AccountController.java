@@ -7,6 +7,7 @@ import com.techelevator.dao.*;
 import com.techelevator.dao.ExerciseClassDao;
 import com.techelevator.model.*;
 import org.apache.commons.io.FileUtils;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -392,6 +393,29 @@ public class AccountController {
         return workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId());
     }
 
+    @RequestMapping( value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
+    public String getWorkoutMetricView() throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(auth.getCurrentUser().getId()));
+            return "memberWorkoutMetric";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping( value = "/gymSessionEquipmentMetrics", method = RequestMethod.GET)
+    public String showEquipmentMetricsView(@RequestParam Long session_id) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
+            auth.getSession().setAttribute("gymSessionEquipmentUsageMapStrength",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"strength"));
+            auth.getSession().setAttribute("gymSessionEquipmentUsageMapCardio",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"cardio"));
+
+            return "memberWorkoutEquipmentMetric";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
+    }
 }
 
 

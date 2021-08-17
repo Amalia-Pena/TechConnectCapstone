@@ -32,7 +32,7 @@ public class JdbcEquipmentUsageDao implements EquipmentUsageDao {
     public List<EquipmentUsage> getGymSessionEquipmentUsage(Long session_id) {
         String sql = "SELECT * FROM equipment_usage WHERE session_id = ?;";
         try {
-            return (List<EquipmentUsage>) jdbcTemplate.queryForObject(sql, new EquipmentRowMapper(), session_id);
+            return (List<EquipmentUsage>) jdbcTemplate.query(sql, new EquipmentRowMapper(), session_id);
         } catch (NullPointerException e) {
             return new ArrayList<>();
         }
