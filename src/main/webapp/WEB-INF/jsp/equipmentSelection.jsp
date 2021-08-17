@@ -11,6 +11,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="<c:url value="/css/equipmentSelection.css"/>" rel="stylesheet" type="text/css" />
+    <c:url var="endGymSessionUrl" value="/endGymSession"/>
     <title>Equipment Selection</title>
 </head>
 <body style="background: url(/siteImages/equipmentSelection.jpg) no-repeat;
@@ -18,7 +19,7 @@
     <h1>Equipment Selection</h1>
 
     <div id = "nest">
-
+<c:if test="${gymSession != null}">
     <form action="${logEquipmentUrl}" method="GET" modelAttribute="equipmentUsage">
         <label for="equipmentSelect">Please select your equipment: </label>
         <select name="equipmentSelect" id="equipmentSelect">
@@ -38,8 +39,16 @@
             </optgroup>
         </select>
         <br><br>
-        <input type="submit" value="Check In">
+        <input class="btn btn-default" type="submit" value="Check In">
+
+
+    <form:form action="${endGymSessionUrl}" method="post" cssStyle="text-align: center;">
+        <button class="btn btn-default" type="submit" > Finish Workout </button>
+    </form:form>
     </form>
+
+
+</c:if>
         
     </div>
 </body>

@@ -37,11 +37,6 @@
     <option value = 11> November</option>
     <option value = 12> December</option>
   </select>
- <%-- <label for = "check_in"> Check In Month (ex: 8)</label>
-  <input type = "text" name="check_in" id = "check_in"/> --%>
-
- <%-- <label for = "check_out"> Check Out Month (ex: 8)</label>
-  <input type = "text" name="check_out" id = "check_out"/> --%>
 
   <input type = "submit"/>
 </form>
@@ -59,5 +54,46 @@
     </tr>
   </c:forEach>
 </table>
+
+
+  <script>
+    window.onload = function () {
+
+      var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2", // "light1", "light2", "dark1", "dark2"
+        title:{
+          text: "Monthly Equipment Use"
+        },
+        axisY: {
+          title: "Days"
+        },
+        data: [{
+          type: "column",
+          showInLegend: true,
+          legendMarkerColor: "grey",
+          legendText: "Equipment Use (days)",
+          dataPoints: [
+            { y: 300878, label: "Venezuela" },
+            { y: 266455,  label: "Saudi" },
+            { y: 169709,  label: "Canada" },
+            { y: 158400,  label: "Iran" },
+            { y: 142503,  label: "Iraq" },
+            { y: 101500, label: "Kuwait" },
+            { y: 97800,  label: "UAE" },
+            { y: 80000,  label: "Russia" }
+          ]
+        }]
+      });
+      chart.render();
+
+    }
+  </script>
+
+
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
 
 <%@ include file = "common/footer.jspf" %>
