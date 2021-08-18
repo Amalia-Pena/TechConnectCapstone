@@ -40,13 +40,11 @@
         </select>
         <br><br>
         <input class="btn btn-default" type="submit" value="Check In">
-
-
+    </form>
+    <br>
     <form:form action="${endGymSessionUrl}" method="post" cssStyle="text-align: center;">
         <button class="btn btn-default" type="submit" > Finish Workout </button>
     </form:form>
-    </form>
-
 
 </c:if>
         

@@ -26,7 +26,7 @@
                         <form:input class="form-control" path="reps" placeholder="reps"/>
                         <form:errors path="reps" cssClass="bg-danger"/>
                     </div>
-                    <div class="form-wrapper">
+                    <div class="form-wrapper" style="margin-right: 20px">
                         <label for="weight_per_rep" class="details">Weight Per Rep</label>
                         <form:input class="form-control" path="weight_per_rep" placeholder="weight_per_rep"/>
                         <form:errors path="weight_per_rep" cssClass="bg-danger"/>
