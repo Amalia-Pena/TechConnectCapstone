@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -34,24 +36,54 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
     }
 
     @Override
-    public int getMemberAverageGymTime(Long user_id, LocalDate start, LocalDate end) {
+    public double getMemberAverageGymTime(Long user_id, LocalDate start, LocalDate end) {
         try {
 
             if (start != null && end != null) {
-                String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= ? AND DATE(check_in) <= ?;";
-                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, start, end);
+                String sql = "SELECT extract(epoch from(AVG(check_out - check_in)))/1440 AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
+                return ((Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, start, end)).getAverageGymTime();
             } else if (start != null) {
                 String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= ?;";
-                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, start);
+                return (double) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, start);
             } else if (end != null) {
                 String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) <= ?;";
-                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, end);
+                return (double) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id, end);
             } else {
                 String sql = "SELECT AVG(check_out - check_in) AS average_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ?;";
-                return (int) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id);
+                return (double) jdbcTemplate.queryForObject(sql, new GymSessionAverageMetricRowMapper(), user_id);
             }
         } catch (NullPointerException e) {
             return 0;
+        }
+    }
+
+    @Override
+    public List<Workout_Metric> getVisitMetricsDefaultWeek(Long user_id) {
+        try {
+            List<Workout_Metric> output = new ArrayList<>();
+            LocalDate startDate = LocalDate.now();
+            int currentDay = startDate.getDayOfWeek().getValue();
+            int[] daysOfWeek = {1, 2, 3, 4, 5, 6, 7};
+            for (int i = 0; i < daysOfWeek.length; i++) {
+                if (daysOfWeek[i] == currentDay) {
+                    startDate = startDate.minusDays(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < 7; i++) {
+
+                String sql = "SELECT extract(epoch from(SUM(check_out - check_in)))/60 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
+                Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate);
+                newWorkout.setDay(startDate.getDayOfWeek());
+                output.add(newWorkout);
+                startDate = startDate.plusDays(1);
+            }
+
+            return output;
+
+        } catch (NullPointerException e) {
+            return null;
         }
     }
 
@@ -75,7 +107,7 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
         public Workout_Metric mapRow(ResultSet results, int i) {
             try {
                 Workout_Metric workout_metric = new Workout_Metric();
-                workout_metric.setAverageGymTime(results.getInt("average_gym_time"));
+                workout_metric.setAverageGymTime(results.getDouble("average_gym_time"));
                 return workout_metric;
 
             } catch (SQLException e) {
