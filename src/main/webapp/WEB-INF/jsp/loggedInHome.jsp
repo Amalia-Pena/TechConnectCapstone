@@ -73,7 +73,7 @@
 
     <c:if test="${gymSession != null}">
         <form:form action="${endGymSessionUrl}" method="post" cssStyle="text-align: center;">
-            <button type="submit" class="btn btn-default">
+            <button type="submit" class="workout-button" style="border-radius: 20px; width: 42rem; background-color: #333333; color: #cccccc;">
                 <div class="box-end-workout">
                     <i class="far fa-stop-circle fa-4x" style="margin-bottom: 1rem"></i>
                     <br/>
@@ -83,7 +83,7 @@
         </form:form>
 
         <form:form action="${startGymSessionUrl}" method="GET" cssStyle="text-align: center;">
-            <button type="submit" class="btn btn-default">
+            <button type="submit" class="workout-button" style="border-radius: 20px; width: 42rem; background-color: #333333; color: #cccccc;">
                 <div class="box-end-workout">
                     <i class="far fa-play-circle fa-4x" style="margin-bottom: 1rem"></i>
                     <br/>
