@@ -9,24 +9,24 @@
     <h1>Visit Metrics</h1>
 
     <div class="box">
-    <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
-    <h3>Total Gym Time: ${allTimeMetric}</h3>
+        <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
+        <h3 style="font-size: 20px"><strong>Total Gym Time: </strong>${allTimeMetric}</h3>
 
     </div>
 
     <div class="box">
-    <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
-    <h3>Gym Time: ${averageTimeMetric}</h3>
+        <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
+        <h3 style="font-size: 20px"><strong>Average Gym Session Time: </strong>${averageTimeMetric} minutes</h3>
 
     </div>
 
 
     <br> <br>
 
-    <div id = "date">
-<script>
-    window.onload = function () {
-        var defualtWeekDataPoints = generateWeekDataPoints();
+    <div id="date">
+        <script>
+            window.onload = function () {
+                var defualtWeekDataPoints = generateWeekDataPoints();
         var chart1 = new CanvasJS.Chart("chartContainer1", {
 
             animationEnabled: true,

@@ -3,16 +3,16 @@ package com.techelevator.model;
 import java.time.DayOfWeek;
 
 public class Workout_Metric {
-    private double totalGymTime;
+    private String totalGymTime;
     private double averageGymTime;
     private DayOfWeek day;
     private int dayOfMonth;
 
-    public double getTotalGymTime() {
+    public String getTotalGymTime() {
         return totalGymTime;
     }
 
-    public void setTotalGymTime(double totalGymTime) {
+    public void setTotalGymTime(String totalGymTime) {
         this.totalGymTime = totalGymTime;
     }
 
