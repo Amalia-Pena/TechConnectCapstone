@@ -68,6 +68,10 @@
                     <input type="file" class="form-control" id="photoPathContainer" name="photoPathContainer" value=""/>
 
                 </div>
+                <div class="form-wrapper">
+                    <label for="description" class="details">Fitness Goals</label>
+                    <textarea id="description" class="form-control" name="description" placeholder="Tell us about your fitness goals.." style="height:200px"></textarea>
+                </div>
                 <fieldset style="display:none">
                     <legend>Role</legend>
                     <form:errors path="role"/>

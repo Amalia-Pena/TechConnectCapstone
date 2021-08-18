@@ -16,7 +16,6 @@ import java.nio.charset.MalformedInputException;
  */
 public class User {
 
-
     @NotBlank(message = "Username is required")
     private String username;
 
@@ -41,6 +40,8 @@ public class User {
     @Email(message = "Please enter a valid email address")
     private String email;
 
+    private String description;
+
     //Added for adding photo to DB
     private byte[] photoPath;
 
@@ -54,21 +55,23 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, double height, double weight, byte[] photoPath) {
+    public User(String firstName, String lastName, String email, double height, double weight, byte[] photoPath, String description) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.height = height;
         this.weight = weight;
         this.photoPath = photoPath;
+        this.description = description;
     }
 
-    public User(String userName, String firstName, String lastName, String email, byte[] photoPath) {
+    public User(String userName, String firstName, String lastName, String email, byte[] photoPath, String description) {
         this.username = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.photoPath = photoPath;
+        this.description = description;
     }
 
     //  public MultipartFile getPhotoPathContainer() {
@@ -124,6 +127,10 @@ public class User {
 
     public byte[] getPhotoPath() {
         return photoPath;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     /**
@@ -193,5 +200,9 @@ public class User {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -16,7 +16,7 @@ public interface UserDao {
      * @param role     the user's role
      * @return the new user
      */
-    public User saveUser(String userName, String password, String role, String firstName, String lastName, String email, byte[] photoPath, double height, double weight);
+    public User saveUser(String userName, String password, String role, String firstName, String lastName, String email, byte[] photoPath, double height, double weight, String description);
 
     public void changePassword(User user, String newPassword);
 
@@ -40,6 +40,6 @@ public interface UserDao {
 
     public User getUser(Long userId);
 
-    public void updateUser(String firstName, String lastName, String email, double height, double weight, byte[] photoPath, Long userId);
+    public void updateUser(String firstName, String lastName, String email, double height, double weight, byte[] photoPath, Long userId, String description);
 
 }

@@ -60,6 +60,12 @@
                                 <form:input type="number" step=".01" min="0" class="form-control" path="weight" value="${user.weight}"/>
                                 <form:errors path="weight" cssClass="bg-danger"/>
                             </div>
+                            <div class="form-wrapper">
+                                <label for="description">Fitness Goals</label>
+                                <textarea id="description" class="form-control" name="description" placeholder="${appCurrentUser.description}" style="height:200px"></textarea>
+                                <form:errors path="weight" cssClass="bg-danger"/>
+
+                            </div>
                         </div>
 
                     <button type="submit" class="btn btn-default">Save</button>

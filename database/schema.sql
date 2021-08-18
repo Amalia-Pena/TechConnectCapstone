@@ -12,6 +12,7 @@ CREATE TABLE app_user
     first_name varchar(255),
     last_name  varchar(255),
     email      varchar(255),
+    description varchar(255),
     photo_path bytea,
     height     decimal,
     weight     decimal

@@ -47,6 +47,10 @@
                                             <p class="m-b-10 f-w-600">Email</p>
                                             <h6 class="text-muted f-w-400">${user.email}</h6>
                                         </div>
+                                        <div class="col-sm-6">
+                                            <p class="m-b-10 f-w-600">Fitness Goals</p>
+                                            <h6 class="text-muted f-w-400">${user.description}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -120,7 +120,7 @@ public class AccountController {
         } else {
             user.setPhotoPath(photoPathContainer.getBytes());
         }
-        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight());
+        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight(), user.getDescription());
         return "redirect:/";
     }
 
@@ -150,7 +150,7 @@ public class AccountController {
             flash.addFlashAttribute("message", "Please fix the following errors:");
             return "redirect:/createEmployee";
         }
-        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight());
+        auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight(), user.getDescription());
         return "redirect:/";
     }
 
@@ -236,7 +236,7 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/editProfile", method = RequestMethod.POST, consumes = {MULTIPART_FORM_DATA_VALUE})
-    public String register(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam double height, @RequestParam double weight, @ModelAttribute("newEmployee") User user, BindingResult result, @RequestParam("photoPathContainer") MultipartFile photoPathContainer, @RequestParam(required = false) String radioButton, RedirectAttributes flash) throws IOException {
+    public String register(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam double height, @RequestParam double weight, @RequestParam (required = false) String description, @ModelAttribute("newEmployee") User user, BindingResult result, @RequestParam("photoPathContainer") MultipartFile photoPathContainer, @RequestParam(required = false) String radioButton, RedirectAttributes flash) throws IOException {
 
         if (result.hasErrors()) {
             flash.addFlashAttribute("user", userDao.getUser(auth.getCurrentUser().getId()));
@@ -247,14 +247,14 @@ public class AccountController {
 
         if (photoPathContainer.isEmpty() && radioButton != null) {
             userDao.getUser(auth.getCurrentUser().getId()).setPhotoPath(null);
-            userDao.updateUser(firstName, lastName, email, height, weight, null, auth.getCurrentUser().getId());
+            userDao.updateUser(firstName, lastName, email, height, weight, null, auth.getCurrentUser().getId(), description);
             return "redirect:profile";
         } else if (photoPathContainer.isEmpty()) {
-            userDao.updateUser(firstName, lastName, email, height, weight, userDao.getUser(auth.getCurrentUser().getId()).getPhotoPath(), auth.getCurrentUser().getId());
+            userDao.updateUser(firstName, lastName, email, height, weight, userDao.getUser(auth.getCurrentUser().getId()).getPhotoPath(), auth.getCurrentUser().getId(), description);
             return "redirect:profile";
         } else {
             userDao.getUser(auth.getCurrentUser().getId()).setPhotoPath(photoPathContainer.getBytes());
-            userDao.updateUser(firstName, lastName, email, height, weight, photoPathContainer.getBytes(), auth.getCurrentUser().getId());
+            userDao.updateUser(firstName, lastName, email, height, weight, photoPathContainer.getBytes(), auth.getCurrentUser().getId(), description);
             return "redirect:profile";
         }
     }
