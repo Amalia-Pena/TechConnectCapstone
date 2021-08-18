@@ -23,7 +23,9 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" style="color:black">
             </div>
+
             <button type="submit" class="btn btn-default">Login</button>
+
         </div>
     </form>
 </body>

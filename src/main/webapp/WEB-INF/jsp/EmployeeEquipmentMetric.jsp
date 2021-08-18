@@ -2,7 +2,7 @@
 
 <c:url var="cssUrl" value="/css/employeeEquipmentMetricCSS.css"/>
 <link rel="stylesheet" href="${cssUrl}"/>
-
+<div id="box">
 <h1>Machine Metrics</h1>
 <c:url var = "employeeMetricUrl" value="/employeeEquipmentMetricList"/>
 <form method = "GET" action = "${employeeMetricUrl}">
@@ -40,7 +40,46 @@
 
   <input type = "submit"/>
 </form>
+</div>
+<br> <br>
 
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <script>
+    window.onload = function() {
+
+      var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        title: {
+          text: "Equipment Metrics"
+        },
+        data: [{
+          type: "pie",
+          startAngle: 240,
+          yValueFormatString: "##0.00\"%\"",
+          indexLabel: "{label} {y}",
+          dataPoints: [
+            <c:forEach items="${getAllEquipmentMetricForEmployee}" var="equipment_metric">
+
+            { label: "${equipment_metric.name}",
+              y: parseFloat("${equipment_metric.equipmentUsage }")},
+
+            </c:forEach>
+          ]
+        }]
+      });
+      chart.render();
+
+    }
+  </script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="${pageContext.request.contextPath}/javascript/canvasjs.min.js"></script>
+</body>
+</html>
 
 <table class="table">
   <tr>
@@ -55,44 +94,6 @@
   </c:forEach>
 </table>
 
-
-  <script>
-    window.onload = function () {
-
-      var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-        theme: "light2", // "light1", "light2", "dark1", "dark2"
-        title:{
-          text: "Monthly Equipment Use"
-        },
-        axisY: {
-          title: "Days"
-        },
-        data: [{
-          type: "column",
-          showInLegend: true,
-          legendMarkerColor: "grey",
-          legendText: "Equipment Use (days)",
-          dataPoints: [
-            { y: 300878, label: "Venezuela" },
-            { y: 266455,  label: "Saudi" },
-            { y: 169709,  label: "Canada" },
-            { y: 158400,  label: "Iran" },
-            { y: 142503,  label: "Iraq" },
-            { y: 101500, label: "Kuwait" },
-            { y: 97800,  label: "UAE" },
-            { y: 80000,  label: "Russia" }
-          ]
-        }]
-      });
-      chart.render();
-
-    }
-  </script>
-
-
-<div id="chartContainer" style="height: 370px; width: 100%;"></div>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 
 

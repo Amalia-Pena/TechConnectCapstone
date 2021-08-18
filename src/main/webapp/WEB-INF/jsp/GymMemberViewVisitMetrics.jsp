@@ -2,14 +2,27 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:url var="gymMetricUrl" value="/gymMemberVisitMetrics"/>
+<link href="<c:url value="/css/gymMemberVisitMetrics.css"/>" rel="stylesheet" type="text/css" />
 <form:form action="${gymMetricUrl}">
-    <div class="form-group">
-        <p>Total Gym Time: ${allTimeMetric}</p>
+
+<h1>Visit Metrics</h1>
+
+    <div class="box">
+        <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
+        <h3>Total Gym Time: ${allTimeMetric}</h3>
+
     </div>
-    <div class="form-group">
-        <p>Average Gym Time: ${averageTimeMetric}</p>
+
+    <div class="box">
+        <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
+        <h3>Gym Time: ${averageTimeMetric}</h3>
+
     </div>
-    <div>
+
+
+    <br> <br>
+
+    <div id = "date">
         <c:url var="gymVisitUrl" value="/gymMemberVisitMetrics"></c:url>
         <form action="gymVisitUrl" method="GET">
             <label for="start_date">Custom Start Date: </label>
