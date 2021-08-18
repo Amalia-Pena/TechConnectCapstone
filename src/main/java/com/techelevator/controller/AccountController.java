@@ -9,6 +9,7 @@ import com.techelevator.model.*;
 import org.apache.commons.io.FileUtils;
 import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,6 +33,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -384,19 +386,55 @@ public class AccountController {
     }
 
     @RequestMapping("/gymMemberVisitMetrics")
-    public String getVisitMetricSelectionPage(HttpServletRequest request, ModelMap map) {
-        map.put("allTimeMetric", getGymMetric());
+    public String getVisitMetricSelectionPage(@RequestParam(required = false) String user_id, @RequestParam(required = false) String start_date, @RequestParam(required = false) String end_date, ModelMap map) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        map.put("allTimeMetric", workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId()).getTotalGymTime());
+        if (start_date != null && end_date != null) {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), LocalDate.parse(start_date, formatter), LocalDate.parse(end_date, formatter)));
+            map.put("start_date", start_date);
+            map.put("end_date", end_date);
+        } else if (start_date != null) {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), LocalDate.parse(start_date, formatter), null));
+            map.put("start_date", start_date);
+            map.put("end", "");
+        } else if (end_date != null) {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), null, LocalDate.parse(end_date, formatter)));
+            map.put("start_date", "");
+            map.put("end", end_date);
+        } else {
+            map.put("averageTimeMetric", workoutMetricDao.getMemberAverageGymTime(auth.getCurrentUser().getId(), null, null));
+            map.put("start_date", "");
+            map.put("end", "");
+        }
+        map.put("defaultWeekMetric", workoutMetricDao.getVisitMetricsDefaultWeek(auth.getCurrentUser().getId()));
+        getDefaultWeekDates();
         return "GymMemberViewVisitMetrics";
     }
 
-    public int getGymMetric() {
-        return workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId());
+    public void getDefaultWeekDates() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate end_Date = null;
+        int[] daysOfWeek = {1, 2, 3, 4, 5, 6, 7};
+        for (int i = 0; i < daysOfWeek.length; i++) {
+            if (daysOfWeek[i] == startDate.getDayOfWeek().getValue()) {
+                startDate = startDate.minusDays(i);
+                end_Date = startDate.plusDays(6 - i);
+                break;
+            }
+        }
+        auth.getSession().setAttribute("defaultWeekStart", startDate);
+        auth.getSession().setAttribute("defaultWeekEnd", end_Date);
     }
 
-    @RequestMapping( value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
-    public String getWorkoutMetricView() throws UnauthorizedException {
+    @RequestMapping(value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
+    public String getWorkoutMetricView(@RequestParam(required = false) String user_id) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
-            auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(auth.getCurrentUser().getId()));
+            if (user_id != null) {
+                auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(Long.valueOf(user_id)));
+            } else {
+                auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(auth.getCurrentUser().getId()));
+            }
+            auth.getSession().setAttribute("allUsersList", userDao.getAllUsers());
             return "memberWorkoutMetric";
         }
         else {
@@ -417,6 +455,12 @@ public class AccountController {
         }
     }
 
+    @RequestMapping(value = "/showTest", method = RequestMethod.GET)
+    public String showTest() throws UnauthorizedException {
+        return "test";
+    }
+
+
 
     @RequestMapping("adminMetrics")
     public String showAdminMetrics() throws UnauthorizedException {
@@ -428,8 +472,6 @@ public class AccountController {
         }
     }
 }
-
-
 
 
 

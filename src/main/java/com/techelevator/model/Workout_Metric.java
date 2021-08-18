@@ -1,13 +1,33 @@
 package com.techelevator.model;
 
-public class Workout_Metric {
-    private int totalGymTime;
+import java.time.DayOfWeek;
 
-    public int getTotalGymTime() {
+public class Workout_Metric {
+    private double totalGymTime;
+    private double averageGymTime;
+    private DayOfWeek day;
+
+    public double getTotalGymTime() {
         return totalGymTime;
     }
 
-    public void setTotalGymTime(int totalGymTime) {
+    public void setTotalGymTime(double totalGymTime) {
         this.totalGymTime = totalGymTime;
+    }
+
+    public double getAverageGymTime() {
+        return averageGymTime;
+    }
+
+    public void setAverageGymTime(double averageGymTime) {
+        this.averageGymTime = averageGymTime;
+    }
+
+    public DayOfWeek getDay() {
+        return day;
+    }
+
+    public void setDay(DayOfWeek day) {
+        this.day = day;
     }
 }

@@ -7,24 +7,29 @@
         <p>Total Gym Time: ${allTimeMetric}</p>
     </div>
     <div class="form-group">
-        <p>Average Gym Time: ${allTimeMetric}</p>
+        <p>Average Gym Time: ${averageTimeMetric}</p>
     </div>
     <div>
-        <h1>Daily Visit Metrics</h1>
+        <c:url var="gymVisitUrl" value="/gymMemberVisitMetrics"></c:url>
+        <form action="gymVisitUrl" method="GET">
+            <label for="start_date">Custom Start Date: </label>
+            <input type="date" name="start_date" id="start_date">
+            <label for="end_date">Custom End Date: </label>
+            <input type="date" name="end_date" id="end_date">
+            <button type="submit" class="btn btn-default">Search</button>
+        </form>
+        <h1>Week: ${defaultWeekStart} - ${defaultWeekEnd} Visit Metrics</h1>
         <table class="table">
             <thead class="table-light">
             <th>Day</th>
-            <th>Average Visit Duration</th>
+            <th>Visit Duration</th>
             </thead>
             <tbody>
-            <c:forEach items="${exerciseClass}" var="exerciseClass">
+            <c:set var="dayFlag" value="false"></c:set>
+            <c:forEach var="dayOfWeek" items="${defaultWeekMetric}">
                 <tr>
-                    <td>${exerciseClass.class_id}</td>
-                    <td>${exerciseClass.instructor_id}</td>
-                    <td>${exerciseClass.class_name}</td>
-                    <td>${exerciseClass.class_description}</td>
-                    <td>${exerciseClass.class_start_date}</td>
-                    <td>${exerciseClass.class_end_date}</td>
+                    <td>${dayOfWeek.day}</td>
+                    <td>${dayOfWeek.totalGymTime}</td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -32,5 +37,45 @@
     </div>
 
 </form:form>
+
+<script>
+    window.onload = function () {
+        var defualtWeekDataPoints = generateDataPoints();
+        var chart = new CanvasJS.Chart("chartContainer", {
+
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Week: " + "${defaultWeekStart}" + "-" + "${defaultWeekEnd}" + " Visit Metrics"
+            },
+            axisY: {
+                title: "Minutes",
+                suffix: "min"
+            },
+            axisX: {},
+            data: [{
+                type: "column",
+                yValueFormatString: "#,##0.000000000000#\"\"",
+                dataPoints: defualtWeekDataPoints
+            }]
+        });
+        chart.render();
+
+        function generateDataPoints() {
+            var arr = [];
+            <c:forEach var="day" items="${defaultWeekMetric}">
+            arr.push({label: "${day.day}", y: parseFloat("${day.totalGymTime}")});
+            </c:forEach>
+            return arr;
+        }
+
+
+    }
+</script>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="${pageContext.request.contextPath}/javascript/canvasjs.min.js"></script>
+</body>
+
 
 <%@ include file="common/footer.jspf" %>
