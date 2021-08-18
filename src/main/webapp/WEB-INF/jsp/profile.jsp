@@ -13,6 +13,7 @@
     <link href="<c:url value="/css/profile.css"/>" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<h1>Your Profile</h1>
     <div class="page-content page-container" id="page-content">
         <div class="padding">
             <div class="row container d-flex justify-content-center">

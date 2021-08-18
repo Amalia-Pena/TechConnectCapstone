@@ -16,14 +16,14 @@
     <c:url var="loginUrl" value="/login"/>
     <c:url var="registerUrl" value="/register"/>
     <c:url var="adminMetricsUrl" value="/adminMetrics"/>
-    <c:url var = "gymMemberWorkoutMetricsUrl" value="/gymMemberWorkoutMetrics"/>
+    <c:url var = "yourMetricsUrl" value="/yourMetrics"/>
 </head>
 <body id="home">
 
 <section class="section-a">
     <div class="containerForNav">
         <div class="sectiona-left">
-            <h1>Welcome Back ${user.firstName}!</h1>
+            <h1>Welcome Back ${appCurrentUser.firstName}!</h1>
             <h3>
                 Let's get fit together!
             </h3>
@@ -45,12 +45,12 @@
                 </div>
             </a>
         </form:form>
-        <form:form action = "${gymMemberWorkoutMetricsUrl}" method="get">
-            <a href = "${gymMemberWorkoutMetricsUrl}">
+        <form:form action = "${yourMetricsUrl}" method="get">
+            <a href = "${yourMetricsUrl}">
                 <div class="box">
                     <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
                     <h3>Your Metrics</h3>
-                    <p>Click to see your equipment metrics</p>
+                    <p>Click to see your gym metrics</p>
                 </div>
 
             </a>
@@ -73,21 +73,21 @@
 
     <c:if test="${gymSession != null}">
         <form:form action="${endGymSessionUrl}" method="post" cssStyle="text-align: center;">
-            <button type="submit" class="btn btn-default">
+            <button type="submit" class="workout-button" style="border-radius: 20px; width: 42rem; background-color: #333333; color: #cccccc;">
                 <div class="box-end-workout">
-                    <i class="far fa-stop-circle fa-4x" style="margin-bottom: 1rem"></i>
+                    <i class="far fa-stop-circle fa-4x" style="margin-bottom: 1rem; color: red;"></i>
                     <br/>
-                    <h3>Finish Workout</h3>
+                    <h3 class="workout-button-text">Finish Workout</h3>
                 </div>
             </button>
         </form:form>
 
         <form:form action="${startGymSessionUrl}" method="GET" cssStyle="text-align: center;">
-            <button type="submit" class="btn btn-default">
+            <button type="submit" class="workout-button" style="border-radius: 20px; width: 42rem; background-color: #333333; color: #cccccc;">
                 <div class="box-end-workout">
-                    <i class="far fa-play-circle fa-4x" style="margin-bottom: 1rem"></i>
+                    <i class="far fa-play-circle fa-4x" style="margin-bottom: 1rem; color: lawngreen"></i>
                     <br/>
-                    <h3>Resume Workout</h3>
+                    <h3 class="workout-button-text">Resume Workout</h3>
                 </div>
             </button>
         </form:form>

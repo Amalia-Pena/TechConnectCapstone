@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #333;
-
+    --primary-color: #444;
+    --secondary-color: #444;
     --overlay-color: rgba(0, 0, 0, 0.7);
     --primary: #ddd;
     --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
@@ -103,8 +103,6 @@ img {
 
 
 
-
-
 .overlay {
     height: 100%;
     width: 100%;
@@ -115,7 +113,8 @@ img {
 }
 
 .boxes {
-    display: grid;
+    display: inline-block !important;
+    justify-items: center;
     grid-gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     margin: 0 1rem;
@@ -126,7 +125,18 @@ img {
     text-align: center;
     padding: 2rem 2rem;
     box-shadow: var(--shadow);
+    display: inline-block;
+    width: 550px;
 }
+
+.box-end-workout {
+    background: var(--primary-color);
+    text-align: center;
+    padding: 2rem 2rem;
+    box-shadow: var(--shadow);
+}
+
+
 
 @media (max-width: 700px) {
 
@@ -160,6 +170,14 @@ img {
         margin-top: 1rem;
     }
 }
+
+#date{
+    text-align: center;
+}
+h3{
+    font-size: 20px;
+}
 h1{
     text-align: center;
+
 }

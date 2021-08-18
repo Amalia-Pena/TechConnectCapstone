@@ -172,3 +172,7 @@ input[type=file]::-webkit-file-upload-button:hover {
         width: 100%;
         padding-right: 15px;
         padding-left: 15px; } }
+
+h1{
+    text-align: center;
+}

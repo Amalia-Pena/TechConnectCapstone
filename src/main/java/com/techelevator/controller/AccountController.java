@@ -408,6 +408,8 @@ public class AccountController {
         }
         map.put("defaultWeekMetric", workoutMetricDao.getVisitMetricsDefaultWeek(auth.getCurrentUser().getId()));
         getDefaultWeekDates();
+        getDefaultMonthView();
+        auth.getSession().setAttribute("defaultMonthMetric", workoutMetricDao.getVisitMetricsDefaultMonth(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultMonthStart"), (LocalDate) auth.getSession().getAttribute("defaultMonthEnd")));
         return "GymMemberViewVisitMetrics";
     }
 
@@ -424,6 +426,20 @@ public class AccountController {
         }
         auth.getSession().setAttribute("defaultWeekStart", startDate);
         auth.getSession().setAttribute("defaultWeekEnd", end_Date);
+    }
+
+    public void getDefaultMonthView() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-dd");
+        LocalDate today = LocalDate.now();
+        String thisMonth = String.valueOf(today.getMonthValue());
+        String thisYear = String.valueOf(today.getYear());
+        LocalDate startDate = LocalDate.parse(thisYear + "-" + thisMonth + "-01", formatter);
+        LocalDate temp = today.plusMonths(1);
+        LocalDate endDate = LocalDate.parse(thisYear + "-" + temp.getMonthValue() + "-01", formatter);
+        endDate = endDate.minusDays(1);
+        auth.getSession().setAttribute("defaultMonthStart", startDate);
+        auth.getSession().setAttribute("defaultMonthEnd", endDate);
+        auth.getSession().setAttribute("defaultMonthTotalDays", endDate.getDayOfMonth());
     }
 
     @RequestMapping(value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
@@ -466,6 +482,16 @@ public class AccountController {
     public String showAdminMetrics() throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "employee"})) {
             return "adminMetrics";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @RequestMapping("yourMetrics")
+    public String showYourMetrics() throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "employee", "user"})) {
+            return "yourMetrics";
         }
         else {
             throw new UnauthorizedException();

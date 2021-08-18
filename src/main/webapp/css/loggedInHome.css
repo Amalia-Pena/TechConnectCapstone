@@ -31,6 +31,12 @@ a {
     text-decoration: none;
 }
 
+a:hover{
+    text-decoration: none;
+    color: whitesmoke;
+    font-weight: bold !important;
+}
+
 ul {
     list-style: none;
 }
@@ -133,8 +139,6 @@ img {
     padding: 2rem 2rem;
     box-shadow: var(--shadow);
 }
-
-
 
 @media (max-width: 700px) {
 

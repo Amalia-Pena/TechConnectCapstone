@@ -2,6 +2,7 @@
 
 <h1> Gym Sessions </h1>
 <c:url var="workoutMetricUrl" value="/gymMemberWorkoutMetrics"/>
+<link href="<c:url value="/css/memberWorkoutMetric.css"/>" rel="stylesheet" type="text/css" />
 
 <table class="table">
     <thead class="table-light">
@@ -15,7 +16,7 @@
         <c:url var="equipmentUsageUrl" value="/gymSessionEquipmentMetrics?session_id=${gymSession.session_id}"/>
 
         <tr>
-            <td><a href="${equipmentUsageUrl}"> Gym Session ${gymSession.session_id}</a></td>
+            <td><a href="${equipmentUsageUrl}"> Gym Session</a></td>
             <td>${gymSession.check_in}</td>
             <td>${gymSession.check_out}</td>
         </tr>
