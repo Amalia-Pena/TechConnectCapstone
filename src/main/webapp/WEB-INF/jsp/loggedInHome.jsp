@@ -75,9 +75,9 @@
         <form:form action="${endGymSessionUrl}" method="post" cssStyle="text-align: center;">
             <button type="submit" class="workout-button" style="border-radius: 20px; width: 42rem; background-color: #333333; color: #cccccc;">
                 <div class="box-end-workout">
-                    <i class="far fa-stop-circle fa-4x" style="margin-bottom: 1rem"></i>
+                    <i class="far fa-stop-circle fa-4x" style="margin-bottom: 1rem; color: red;"></i>
                     <br/>
-                    <h3>Finish Workout</h3>
+                    <h3 class="workout-button-text">Finish Workout</h3>
                 </div>
             </button>
         </form:form>
@@ -85,9 +85,9 @@
         <form:form action="${startGymSessionUrl}" method="GET" cssStyle="text-align: center;">
             <button type="submit" class="workout-button" style="border-radius: 20px; width: 42rem; background-color: #333333; color: #cccccc;">
                 <div class="box-end-workout">
-                    <i class="far fa-play-circle fa-4x" style="margin-bottom: 1rem"></i>
+                    <i class="far fa-play-circle fa-4x" style="margin-bottom: 1rem; color: lawngreen"></i>
                     <br/>
-                    <h3>Resume Workout</h3>
+                    <h3 class="workout-button-text">Resume Workout</h3>
                 </div>
             </button>
         </form:form>
