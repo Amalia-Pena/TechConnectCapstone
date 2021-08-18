@@ -27,12 +27,12 @@
                         <form:errors path="reps" cssClass="bg-danger"/>
                     </div>
                     <div class="form-wrapper" style="margin-right: 20px">
-                        <label for="weight_per_rep" class="details">Weight Per Rep</label>
+                        <label for="weight_per_rep" class="details">Weight Per Rep (lbs.)</label>
                         <form:input class="form-control" path="weight_per_rep" placeholder="weight_per_rep"/>
                         <form:errors path="weight_per_rep" cssClass="bg-danger"/>
                     </div>
                     <div class="form-wrapper">
-                        <label for="distance" class="details">Distance</label>
+                        <label for="distance" class="details">Distance (miles)</label>
                         <form:input class="form-control" path="distance" placeholder="distance" value="0"/>
                         <form:errors path="distance" cssClass="bg-danger"/>
                     </div>
