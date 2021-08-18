@@ -15,4 +15,6 @@ public interface WorkoutMetricDao {
 
     List<Workout_Metric> getVisitMetricsDefaultMonth(Long user_id, LocalDate startDate, LocalDate endDate);
 
+    List<Workout_Metric> getVisitMetricsDefaultYear(Long user_id, LocalDate startDate, LocalDate endDate);
+
 }

@@ -28,12 +28,12 @@
         <script>
             window.onload = function () {
                 var defualtWeekDataPoints = generateWeekDataPoints();
-        var chart1 = new CanvasJS.Chart("chartContainer1", {
+                var chart1 = new CanvasJS.Chart("chartContainer1", {
 
-            animationEnabled: true,
-            theme: "dark2", // "light1", "light2", "dark1", "dark2"
-            title: {
-                text: "Week: " + "${defaultWeekStart}" + "-" + "${defaultWeekEnd}" + " Visit Metrics"
+                    animationEnabled: true,
+                    theme: "dark2", // "light1", "light2", "dark1", "dark2"
+                    title: {
+                        text: "Week: " + "${defaultWeekStart}" + "-" + "${defaultWeekEnd}" + " Visit Metrics"
             },
             axisY: {
                 title: "Gym Session Time (Minutes)"
@@ -77,30 +77,66 @@
                 dataPoints: defualtMonthDataPoints
             }]
         });
-        chart1.render();
-        chart2.render();
 
         function onClick(e) {
             window.open(e.dataPoint.link, '_blank');
         }
 
-        function generateMonthDataPoints() {
-            var arr = [];
-            <c:forEach var="day" items="${defaultMonthMetric}">
-            arr.push({label: "${day.dayOfMonth}", y: parseFloat("${day.totalGymTime}"), link: "http://www.google.com"});
-            </c:forEach>
-            return arr;
-        }
+                function generateMonthDataPoints() {
+                    var arr = [];
+                    <c:forEach var="day" items="${defaultMonthMetric}">
+                    arr.push({
+                        label: "${day.dayOfMonth}",
+                        y: parseFloat("${day.totalGymTime}"),
+                        link: "http://www.google.com"
+                    });
+                    </c:forEach>
+                    return arr;
+                }
 
-    }
-</script>
+                var defaultYearDataPoints = generateYearDataPoints();
+                var chart3 = new CanvasJS.Chart("chartContainer3", {
+
+                    animationEnabled: true,
+                    theme: "dark2", // "light1", "light2", "dark1", "dark2"
+                    title: {
+                        text: "Year: " + "${defaultYearStart}" + " to " + "${defaultYearEnd}" + " Visit Metrics"
+                    },
+                    axisY: {
+                        title: "Gym Session Time (Minutes)"
+
+                    },
+                    axisX: {},
+                    data: [{
+                        type: "column",
+                        yValueFormatString: "#,##0.00#\"\"",
+                        dataPoints: defaultYearDataPoints
+                    }]
+                });
+
+
+                function generateYearDataPoints() {
+                    var arr = [];
+                    <c:forEach var="month" items="${defaultYearMetric}">
+                    arr.push({label: "${month.month}", y: parseFloat("${month.totalGymTime}")});
+                    </c:forEach>
+                    return arr;
+                }
+
+                chart1.render();
+                chart2.render();
+                chart3.render();
+            }
+        </script>
     </div>
-    </form:form>
+</form:form>
 
 <body>
 <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
 <p></p>
 <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+<p></p>
+<div id="chartContainer3" style="height: 300px; width: 100%;"></div>
 <script src="${pageContext.request.contextPath}/javascript/canvasjs.min.js"></script>
 </body>
 

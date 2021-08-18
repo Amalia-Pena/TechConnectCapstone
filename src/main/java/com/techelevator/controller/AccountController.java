@@ -409,7 +409,9 @@ public class AccountController {
         map.put("defaultWeekMetric", workoutMetricDao.getVisitMetricsDefaultWeek(auth.getCurrentUser().getId()));
         getDefaultWeekDates();
         getDefaultMonthView();
+        getDefaultYearView();
         auth.getSession().setAttribute("defaultMonthMetric", workoutMetricDao.getVisitMetricsDefaultMonth(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultMonthStart"), (LocalDate) auth.getSession().getAttribute("defaultMonthEnd")));
+        auth.getSession().setAttribute("defaultYearMetric", workoutMetricDao.getVisitMetricsDefaultYear(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultYearStart"), (LocalDate) auth.getSession().getAttribute("defaultYearEnd")));
         return "GymMemberViewVisitMetrics";
     }
 
@@ -440,6 +442,18 @@ public class AccountController {
         auth.getSession().setAttribute("defaultMonthStart", startDate);
         auth.getSession().setAttribute("defaultMonthEnd", endDate);
         auth.getSession().setAttribute("defaultMonthTotalDays", endDate.getDayOfMonth());
+    }
+
+    public void getDefaultYearView() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-dd");
+        LocalDate today = LocalDate.now();
+        String year = String.valueOf(today.minusMonths(11).getYear());
+        String month = String.valueOf(today.minusMonths(11).getMonthValue());
+        LocalDate startDate = LocalDate.parse(year + "-" + month + "-01", formatter);
+        LocalDate temp = LocalDate.parse(today.getYear() + "-" + today.plusMonths(1).getMonthValue() + "-01", formatter);
+        LocalDate endDate = LocalDate.parse(today.getYear() + "-" + today.getMonthValue() + "-" + temp.minusDays(1).getDayOfMonth(), formatter);
+        auth.getSession().setAttribute("defaultYearStart", startDate);
+        auth.getSession().setAttribute("defaultYearEnd", endDate);
     }
 
     @RequestMapping(value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
