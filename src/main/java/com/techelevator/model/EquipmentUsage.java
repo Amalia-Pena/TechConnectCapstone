@@ -14,6 +14,7 @@ public class EquipmentUsage {
     private Long equipment_usage_id;
     private Long equipment_id;
     private Long session_id;
+    private LocalDate formattedDate;
 
     @NotNull(message = "Cannot be blank")
     @Min(value = 0, message = "Do you even lift bro????")
@@ -93,5 +94,13 @@ public class EquipmentUsage {
 
     public void setCheck_out(Timestamp check_out) {
         this.check_out = check_out;
+    }
+
+    public LocalDate getFormattedDate() {
+        return formattedDate;
+    }
+
+    public void setFormattedDate(LocalDate formattedDate) {
+        this.formattedDate = formattedDate;
     }
 }

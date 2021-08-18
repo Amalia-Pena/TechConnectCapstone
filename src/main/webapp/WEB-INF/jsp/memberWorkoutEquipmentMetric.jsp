@@ -1,10 +1,12 @@
 <%@ include file="common/header.jspf" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
 <c:url var="workoutMetricUrl" value="/gymMemberWorkoutMetrics"/>
 
-<%--
+
 <c:if test="${not empty gymSessionEquipmentUsageMapStrength}">
+
 
     <table class="table">
         <thead class="table-light">
@@ -31,6 +33,8 @@
         </tbody>
     </table>
 </c:if>
+
+<%--
 <c:if test="${not empty gymSessionEquipmentUsageMapCardio}">
 
 <table class="table">
@@ -60,10 +64,11 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-
-
     <meta charset="UTF-8">
+
+    <c:if test="${not empty gymSessionEquipmentUsageMapCardio}">
     <script>
+
         window.onload = function () {
 
             var chart = new CanvasJS.Chart("chartContainer", {
@@ -94,7 +99,7 @@
                     dataPoints: [
                         <c:forEach var="entry" items="${gymSessionEquipmentUsageMapCardio}">
                         <c:if test="${entry.value.equipment_id == 1}">
-                        { y: parseFloat("${entry.value.distance}"), label:"${entry.value.check_in}"},
+                        { y: parseFloat("${entry.value.distance}"), label:"${entry.value.formattedDate}" },
                         </c:if>
                         </c:forEach>
                     ]
@@ -107,7 +112,7 @@
                         dataPoints: [
                             <c:forEach var="entry" items="${gymSessionEquipmentUsageMapCardio}">
                             <c:if test="${entry.value.equipment_id == 2}">
-                            { y: parseFloat("${entry.value.distance}"), label:"${entry.value.check_in}"},
+                            { y: parseFloat("${entry.value.distance}"), label:"${entry.value.formattedDate}"},
                             </c:if>
                             </c:forEach>
                         ]
@@ -127,7 +132,9 @@
             }
 
         }
+
     </script>
+    </c:if>
 </head>
 <body>
 <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
