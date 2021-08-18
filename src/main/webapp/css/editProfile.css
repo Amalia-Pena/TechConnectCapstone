@@ -93,8 +93,8 @@ select option[value=""][disabled] {
 
 button {
     border: none;
-    width: 152px;
-    height: 40px;
+    width: 90px;
+    height: 35px;
     margin: auto;
     margin-top: 29px;
     cursor: pointer;
@@ -105,7 +105,6 @@ button {
     background: aqua;
     font-size: 13px;
     color: #fff;
-    text-transform: uppercase;
     border-radius: 20px;
     overflow: hidden;
     -webkit-transform: perspective(1px) translateZ(0);
@@ -155,7 +154,7 @@ input[type=file]::-webkit-file-upload-button {
 }
 
 input[type=file]::-webkit-file-upload-button:hover {
-    background-color: aqua;
+   
     border: 2px solid grey;
 }
 
