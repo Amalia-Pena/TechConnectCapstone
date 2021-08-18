@@ -27,23 +27,46 @@
     <div id="date">
         <script>
             window.onload = function () {
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+
+                    animationEnabled: true,
+                    theme: "dark2", // "light1", "light2", "dark1", "dark2"
+                    title: {
+                        text: "Today's Metrics"
+                    },
+                    axisY: {
+                        title: "Gym Session Time (Minutes)"
+
+                    },
+                    axisX: {},
+                    data: [{
+                        type: "column",
+                        yValueFormatString: "#,##0.00#\"\"",
+                        dataPoints: [{
+                            label: "${defaultDayMetric.day}",
+                            y: parseFloat("${defaultDayMetric.totalGymTime}")
+                        }]
+                    }]
+                });
+
                 var defualtWeekDataPoints = generateWeekDataPoints();
                 var chart1 = new CanvasJS.Chart("chartContainer1", {
 
                     animationEnabled: true,
                     theme: "dark2", // "light1", "light2", "dark1", "dark2"
                     title: {
-                        text: "Week: " + "${defaultWeekStart}" + "-" + "${defaultWeekEnd}" + " Visit Metrics"
-            },
-            axisY: {
-                title: "Gym Session Time (Minutes)"
+                        text: "Week: " + "${defaultWeekStart}" + "-" + "${defaultWeekEnd}" + " Metrics"
+                    },
+                    axisY: {
+                        title: "Gym Session Time (Minutes)"
 
-            },
-            axisX: {},
-            data: [{
-                type: "column",
-                yValueFormatString: "#,##0.00#\"\"",
-                dataPoints: defualtWeekDataPoints
+                    },
+                    axisX: {},
+                    data: [{
+                        type: "column",
+                        yValueFormatString: "#,##0.00#\"\"",
+                        dataPoints: defualtWeekDataPoints
             }]
         });
 
@@ -57,23 +80,23 @@
         }
 
 
-        var defualtMonthDataPoints = generateMonthDataPoints();
-        var chart2 = new CanvasJS.Chart("chartContainer2", {
+                var defualtMonthDataPoints = generateMonthDataPoints();
+                var chart2 = new CanvasJS.Chart("chartContainer2", {
 
-            animationEnabled: true,
-            theme: "dark2", // "light1", "light2", "dark1", "dark2"
-            title: {
-                text: "Month: " + "${defaultMonthStart}" + " to " + "${defaultMonthEnd}" + " Visit Metrics"
-            },
-            axisY: {
-                title: "Gym Session Time (Minutes)"
+                    animationEnabled: true,
+                    theme: "dark2", // "light1", "light2", "dark1", "dark2"
+                    title: {
+                        text: "Month: " + "${defaultMonthStart}" + " to " + "${defaultMonthEnd}" + " Metrics"
+                    },
+                    axisY: {
+                        title: "Gym Session Time (Minutes)"
 
-            },
-            axisX: {title: "Day of the Month"},
-            data: [{
-                type: "column",
-                click: onClick,
-                yValueFormatString: "#,##0.00#\"\"",
+                    },
+                    axisX: {title: "Day of the Month"},
+                    data: [{
+                        type: "column",
+                        click: onClick,
+                        yValueFormatString: "#,##0.00#\"\"",
                 dataPoints: defualtMonthDataPoints
             }]
         });
@@ -100,7 +123,7 @@
                     animationEnabled: true,
                     theme: "dark2", // "light1", "light2", "dark1", "dark2"
                     title: {
-                        text: "Year: " + "${defaultYearStart}" + " to " + "${defaultYearEnd}" + " Visit Metrics"
+                        text: "Year: " + "${defaultYearStart}" + " to " + "${defaultYearEnd}" + " Metrics"
                     },
                     axisY: {
                         title: "Gym Session Time (Minutes)"
@@ -123,6 +146,7 @@
                     return arr;
                 }
 
+                chart.render();
                 chart1.render();
                 chart2.render();
                 chart3.render();
@@ -132,6 +156,8 @@
 </form:form>
 
 <body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<p></p>
 <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
 <p></p>
 <div id="chartContainer2" style="height: 300px; width: 100%;"></div>

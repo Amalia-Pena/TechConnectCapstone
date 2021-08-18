@@ -407,12 +407,21 @@ public class AccountController {
             map.put("end", "");
         }
         map.put("defaultWeekMetric", workoutMetricDao.getVisitMetricsDefaultWeek(auth.getCurrentUser().getId()));
+        getDefaultDayMetric();
         getDefaultWeekDates();
         getDefaultMonthView();
         getDefaultYearView();
         auth.getSession().setAttribute("defaultMonthMetric", workoutMetricDao.getVisitMetricsDefaultMonth(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultMonthStart"), (LocalDate) auth.getSession().getAttribute("defaultMonthEnd")));
         auth.getSession().setAttribute("defaultYearMetric", workoutMetricDao.getVisitMetricsDefaultYear(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultYearStart"), (LocalDate) auth.getSession().getAttribute("defaultYearEnd")));
+        auth.getSession().setAttribute("defaultDayMetric", workoutMetricDao.getVisitMetricDefaultDay(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultDayStart")));
         return "GymMemberViewVisitMetrics";
+    }
+
+    public void getDefaultDayMetric() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate;
+        auth.getSession().setAttribute("defaultDayStart", startDate);
+        auth.getSession().setAttribute("defaultDayStart", endDate);
     }
 
     public void getDefaultWeekDates() {
