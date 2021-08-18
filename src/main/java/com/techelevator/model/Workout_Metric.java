@@ -6,6 +6,7 @@ public class Workout_Metric {
     private double totalGymTime;
     private double averageGymTime;
     private DayOfWeek day;
+    private int dayOfMonth;
 
     public double getTotalGymTime() {
         return totalGymTime;
@@ -29,5 +30,13 @@ public class Workout_Metric {
 
     public void setDay(DayOfWeek day) {
         this.day = day;
+    }
+
+    public int getDayOfMonth() {
+        return dayOfMonth;
+    }
+
+    public void setDayOfMonth(int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 }
