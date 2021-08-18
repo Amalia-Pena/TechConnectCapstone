@@ -3,7 +3,7 @@
 
 <c:url var="workoutMetricUrl" value="/gymMemberWorkoutMetrics"/>
 
-<%--
+
 <c:if test="${not empty gymSessionEquipmentUsageMapStrength}">
 
     <table class="table">
@@ -31,6 +31,8 @@
         </tbody>
     </table>
 </c:if>
+
+<%--
 <c:if test="${not empty gymSessionEquipmentUsageMapCardio}">
 
 <table class="table">
@@ -60,10 +62,11 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-
-
     <meta charset="UTF-8">
+
+
     <script>
+    <c:if test="${not empty gymSessionEquipmentUsageMapCardio}">
         window.onload = function () {
 
             var chart = new CanvasJS.Chart("chartContainer", {
@@ -127,6 +130,7 @@
             }
 
         }
+    </c:if>
     </script>
 </head>
 <body>
