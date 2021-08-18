@@ -5,8 +5,8 @@
 <link href="<c:url value="/css/gymMemberVisitMetrics.css"/>" rel="stylesheet" type="text/css" />
 <form:form action="${gymMetricUrl}">
 
+<h1>Visit Metrics</h1>
 
-    <section class="boxes"></section>
     <div class="box">
         <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
         <h3>Total Gym Time: ${allTimeMetric}</h3>
@@ -19,7 +19,7 @@
 
     </div>
 
-    </section>
+
     <br> <br>
 
     <div id = "date">

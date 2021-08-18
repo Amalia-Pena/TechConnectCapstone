@@ -125,6 +125,8 @@ img {
     text-align: center;
     padding: 2rem 2rem;
     box-shadow: var(--shadow);
+    display: inline-block;
+    width: 550px;
 }
 
 .box-end-workout {
@@ -173,5 +175,9 @@ img {
     text-align: center;
 }
 h3{
-    font-size: 40px;
+    font-size: 20px;
+}
+h1{
+    text-align: center;
+
 }
