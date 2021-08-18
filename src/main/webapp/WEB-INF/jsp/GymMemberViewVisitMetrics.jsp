@@ -7,7 +7,7 @@
 <form:form action="${gymMetricUrl}">
 
     <h1>Visit Metrics</h1>
-
+    <section class = "boxes">
     <div class="box">
     <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
     <h3>Total Gym Time: ${allTimeMetric}</h3>
@@ -19,6 +19,7 @@
     <h3>Gym Time: ${averageTimeMetric}</h3>
 
     </div>
+    </section>
 
 
     <br> <br>

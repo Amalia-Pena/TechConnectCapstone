@@ -45,6 +45,7 @@
                 </div>
             </a>
         </form:form>
+    </c:if>
         <form:form action = "${yourMetricsUrl}" method="get">
             <a href = "${yourMetricsUrl}">
                 <div class="box">
@@ -67,11 +68,12 @@
 
                 </a>
             </form:form>
-        </c:if>
-
     </c:if>
-
+</section>
+<br>
+<section class="boxes">
     <c:if test="${gymSession != null}">
+
         <form:form action="${endGymSessionUrl}" method="post" cssStyle="text-align: center;">
             <button type="submit" class="workout-button" style="border-radius: 20px; width: 42rem; background-color: #333333; color: #cccccc;">
                 <div class="box-end-workout">
