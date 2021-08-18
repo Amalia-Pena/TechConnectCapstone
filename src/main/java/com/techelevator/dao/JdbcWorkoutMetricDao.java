@@ -58,6 +58,18 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
     }
 
     @Override
+    public Workout_Metric getVisitMetricDefaultDay(Long user_id, LocalDate startDate) {
+        try {
+            String sql = "SELECT extract(epoch from(SUM(check_out - check_in)))/60 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
+            Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate);
+            newWorkout.setDay(startDate.getDayOfWeek());
+            return newWorkout;
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<Workout_Metric> getVisitMetricsDefaultWeek(Long user_id) {
         try {
             List<Workout_Metric> output = new ArrayList<>();
