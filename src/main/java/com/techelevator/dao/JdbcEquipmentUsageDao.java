@@ -52,6 +52,7 @@ public class JdbcEquipmentUsageDao implements EquipmentUsageDao {
                 equipmentUsage.setDistance(results.getDouble("distance"));
                 equipmentUsage.setCheck_in(results.getTimestamp("check_in"));
                 equipmentUsage.setCheck_out(results.getTimestamp("check_out"));
+                equipmentUsage.setFormattedDate(equipmentUsage.getCheck_in().toLocalDateTime().toLocalDate());
                 return equipmentUsage;
             } catch (SQLException e) {
                 return null;

@@ -1,10 +1,12 @@
 <%@ include file="common/header.jspf" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
 <c:url var="workoutMetricUrl" value="/gymMemberWorkoutMetrics"/>
 
 
 <c:if test="${not empty gymSessionEquipmentUsageMapStrength}">
+
 
     <table class="table">
         <thead class="table-light">
@@ -97,7 +99,7 @@
                     dataPoints: [
                         <c:forEach var="entry" items="${gymSessionEquipmentUsageMapCardio}">
                         <c:if test="${entry.value.equipment_id == 1}">
-                        { y: parseFloat("${entry.value.distance}"), label:"${entry.value.check_in}"},
+                        { y: parseFloat("${entry.value.distance}"), label:"${entry.value.formattedDate}" },
                         </c:if>
                         </c:forEach>
                     ]
@@ -110,7 +112,7 @@
                         dataPoints: [
                             <c:forEach var="entry" items="${gymSessionEquipmentUsageMapCardio}">
                             <c:if test="${entry.value.equipment_id == 2}">
-                            { y: parseFloat("${entry.value.distance}"), label:"${entry.value.check_in}"},
+                            { y: parseFloat("${entry.value.distance}"), label:"${entry.value.formattedDate}"},
                             </c:if>
                             </c:forEach>
                         ]
