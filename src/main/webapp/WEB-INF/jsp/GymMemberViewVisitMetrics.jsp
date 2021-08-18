@@ -2,13 +2,28 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-<div class="form-group">
-    <p>Total Gym Time: ${allTimeMetric}</p>
-</div>
-<div class="form-group">
-    <p>Average Gym Time: ${averageTimeMetric}</p>
-</div>
+<c:url var="gymMetricUrl" value="/gymMemberVisitMetrics"/>
+<link href="<c:url value="/css/gymMemberVisitMetrics.css"/>" rel="stylesheet" type="text/css" />
+<form:form action="${gymMetricUrl}">
 
+    <h1>Visit Metrics</h1>
+
+    <div class="box">
+    <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
+    <h3>Total Gym Time: ${allTimeMetric}</h3>
+
+    </div>
+
+    <div class="box">
+    <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
+    <h3>Gym Time: ${averageTimeMetric}</h3>
+
+    </div>
+
+
+    <br> <br>
+
+    <div id = "date">
 <script>
     window.onload = function () {
         var defualtWeekDataPoints = generateWeekDataPoints();
@@ -78,6 +93,8 @@
 
     }
 </script>
+    </div>
+    </form:form>
 
 <body>
 <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
