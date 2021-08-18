@@ -66,9 +66,9 @@
 <head>
     <meta charset="UTF-8">
 
-
-    <script>
     <c:if test="${not empty gymSessionEquipmentUsageMapCardio}">
+    <script>
+
         window.onload = function () {
 
             var chart = new CanvasJS.Chart("chartContainer", {
@@ -132,8 +132,9 @@
             }
 
         }
-    </c:if>
+
     </script>
+    </c:if>
 </head>
 <body>
 <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
