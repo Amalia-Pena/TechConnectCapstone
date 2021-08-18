@@ -76,6 +76,7 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
                 String sql = "SELECT extract(epoch from(SUM(check_out - check_in)))/60 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
                 Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate);
                 newWorkout.setDay(startDate.getDayOfWeek());
+                newWorkout.setDayOfMonth(startDate.getDayOfMonth());
                 output.add(newWorkout);
                 startDate = startDate.plusDays(1);
             }
@@ -87,6 +88,27 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
         }
     }
 
+    @Override
+    public List<Workout_Metric> getVisitMetricsDefaultMonth(Long user_id, LocalDate startDate, LocalDate endDate) {
+        try {
+            List<Workout_Metric> output = new ArrayList<>();
+            int currentDay = 1;
+            for (int i = 1; i <= endDate.getDayOfMonth(); i++) {
+                String sql = "SELECT extract(epoch from(SUM(check_out - check_in)))/60 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
+                Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate);
+                newWorkout.setDay(startDate.getDayOfWeek());
+                newWorkout.setDayOfMonth(startDate.getDayOfMonth());
+                System.out.println(newWorkout.getTotalGymTime() + ":" + newWorkout.getDayOfMonth());
+                output.add(newWorkout);
+                startDate = startDate.plusDays(1);
+            }
+
+            return output;
+
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
 
     private class GymSessionTotalMetricRowMapper implements RowMapper {
         @Override
