@@ -16,14 +16,14 @@
     <c:url var="loginUrl" value="/login"/>
     <c:url var="registerUrl" value="/register"/>
     <c:url var="adminMetricsUrl" value="/adminMetrics"/>
-    <c:url var = "gymMemberWorkoutMetricsUrl" value="/gymMemberWorkoutMetrics"/>
+    <c:url var = "yourMetricsUrl" value="/yourMetrics"/>
 </head>
 <body id="home">
 
 <section class="section-a">
     <div class="containerForNav">
         <div class="sectiona-left">
-            <h1>Welcome Back ${user.firstName}!</h1>
+            <h1>Welcome Back ${appCurrentUser.firstName}!</h1>
             <h3>
                 Let's get fit together!
             </h3>
@@ -45,12 +45,12 @@
                 </div>
             </a>
         </form:form>
-        <form:form action = "${gymMemberWorkoutMetricsUrl}" method="get">
-            <a href = "${gymMemberWorkoutMetricsUrl}">
+        <form:form action = "${yourMetricsUrl}" method="get">
+            <a href = "${yourMetricsUrl}">
                 <div class="box">
                     <i class="fas fa-chart-bar fa-4x" style="margin-bottom: 1rem"></i>
                     <h3>Your Metrics</h3>
-                    <p>Click to see your equipment metrics</p>
+                    <p>Click to see your gym metrics</p>
                 </div>
 
             </a>

@@ -471,6 +471,16 @@ public class AccountController {
             throw new UnauthorizedException();
         }
     }
+
+    @RequestMapping("yourMetrics")
+    public String showYourMetrics() throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "employee", "user"})) {
+            return "yourMetrics";
+        }
+        else {
+            throw new UnauthorizedException();
+        }
+    }
 }
 
 
