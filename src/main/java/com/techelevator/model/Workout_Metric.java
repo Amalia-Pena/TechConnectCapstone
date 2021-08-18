@@ -7,6 +7,7 @@ public class Workout_Metric {
     private double averageGymTime;
     private DayOfWeek day;
     private int dayOfMonth;
+    private String month;
 
     public String getTotalGymTime() {
         return totalGymTime;
@@ -38,5 +39,13 @@ public class Workout_Metric {
 
     public void setDayOfMonth(int dayOfMonth) {
         this.dayOfMonth = dayOfMonth;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 }
