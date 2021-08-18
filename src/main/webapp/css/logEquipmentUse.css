@@ -93,7 +93,7 @@ select option[value=""][disabled] {
 
 button {
     border: none;
-    width: 152px;
+    width: 100px;
     height: 40px;
     margin: auto;
     margin-top: 29px;
@@ -102,10 +102,9 @@ button {
     align-items: center;
     justify-content: center;
     padding: 0;
-    background: aqua;
+
     font-size: 13px;
     color: #fff;
-    text-transform: uppercase;
     border-radius: 20px;
     overflow: hidden;
     -webkit-transform: perspective(1px) translateZ(0);
@@ -155,7 +154,7 @@ input[type=file]::-webkit-file-upload-button {
 }
 
 input[type=file]::-webkit-file-upload-button:hover {
-    background-color: aqua;
+
     border: 2px solid grey;
 }
 
@@ -188,3 +187,5 @@ input[type=file]::-webkit-file-upload-button:hover {
         width: 100%;
         padding-right: 15px;
         padding-left: 15px; } }
+
+
