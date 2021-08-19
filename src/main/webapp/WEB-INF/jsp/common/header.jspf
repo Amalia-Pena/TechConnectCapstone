@@ -11,6 +11,7 @@
     <c:url var="cssUrl" value="/css/site.css"/>
     <link rel="stylesheet" href="${cssUrl}"/>
     <c:url var="profileUrl" value="/profile"/>
+
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">

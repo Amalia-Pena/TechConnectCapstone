@@ -267,6 +267,7 @@ public class AccountController {
     @RequestMapping(path = "/exerciseClasses", method = RequestMethod.GET)
     public String viewExerciseClasses(HttpServletRequest request) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "user", "employee"})) {
+            auth.getSession().setAttribute("exerciseClassList", exerciseClassDao.getAllClasses());
             request.setAttribute("exerciseClass", exerciseClassDao.getAllClasses());
             request.setAttribute("sourceUrl", "exerciseClass");
             return "exerciseClass";

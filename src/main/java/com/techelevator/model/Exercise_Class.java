@@ -1,13 +1,16 @@
 package com.techelevator.model;
 
+import java.time.LocalDate;
+
 public class Exercise_Class {
     // Instance variables
     private Long class_id;
     private Long instructor_id;
     private String class_name;
     private String class_description;
-    private String class_start_date;
-    private String class_end_date;
+    private LocalDate class_start_date;
+    private LocalDate class_end_date;
+    private String class_color;
 
     // Getters
 
@@ -27,11 +30,11 @@ public class Exercise_Class {
         return class_description;
     }
 
-    public String getClass_start_date() {
+    public LocalDate getClass_start_date() {
         return class_start_date;
     }
 
-    public String getClass_end_date() {
+    public LocalDate getClass_end_date() {
         return class_end_date;
     }
 
@@ -53,11 +56,19 @@ public class Exercise_Class {
         this.class_description = class_description;
     }
 
-    public void setClass_start_date(String class_start_date) {
+    public void setClass_start_date(LocalDate class_start_date) {
         this.class_start_date = class_start_date;
     }
 
-    public void setClass_end_date(String class_end_date) {
+    public void setClass_end_date(LocalDate class_end_date) {
         this.class_end_date = class_end_date;
+    }
+
+    public String getClass_color() {
+        return class_color;
+    }
+
+    public void setClass_color(String class_color) {
+        this.class_color = class_color;
     }
 }
