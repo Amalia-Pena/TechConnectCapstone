@@ -1,21 +1,21 @@
 BEGIN TRANSACTION;
 
 -- CREATE statements go here
-DROP TABLE IF EXISTS app_user,person, employee, exercise_class, class_members, equipment, equipment_categories, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
+DROP TABLE IF EXISTS app_user, person, employee, exercise_class, class_members, equipment, equipment_categories, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
 CREATE TABLE app_user
 (
-    user_id    SERIAL PRIMARY KEY,
-    user_name  varchar(32)  NOT NULL UNIQUE,
-    password   varchar(32)  NOT NULL,
-    role       varchar(32),
-    salt       varchar(255) NOT NULL,
-    first_name varchar(255),
-    last_name  varchar(255),
-    email      varchar(255),
+    user_id     SERIAL PRIMARY KEY,
+    user_name   varchar(32)  NOT NULL UNIQUE,
+    password    varchar(32)  NOT NULL,
+    role        varchar(32),
+    salt        varchar(255) NOT NULL,
+    first_name  varchar(255),
+    last_name   varchar(255),
+    email       varchar(255),
     description varchar(255),
-    photo_path bytea,
-    height     decimal,
-    weight     decimal
+    photo_path  bytea,
+    height      decimal,
+    weight      decimal
 );
 
 CREATE TABLE exercise_class
