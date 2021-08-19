@@ -550,7 +550,7 @@ function calendarJs(id, options, startDateTime) {
             buildDropDownMenus();
         }
 
-        _element_HeaderDateDisplay_Text.innerText = _options.monthNames[_currentDate.getMonth()] + ", " + _currentDate.getFullYear() + " ▾";
+        _element_HeaderDateDisplay_Text.innerText = _options.monthNames[_currentDate.getMonth()] + ", " + _currentDate.getFullYear() + "";
     }
 
 

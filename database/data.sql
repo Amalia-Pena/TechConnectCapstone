@@ -57,4 +57,6 @@ insert into assistance_media (equipment_id, photo_link, photo_name) values ((sel
 insert into assistance_media (equipment_id, photo_link, photo_name) values ((select equipment_id from equipment where name = 'Preacher Bench'), 'https://i.imgur.com/znKzpHU.jpg', 'Preacher Bench Image');
 insert into assistance_media (equipment_id, photo_link, photo_name) values ((select equipment_id from equipment where name = 'Calf Machine'), 'https://i.imgur.com/DBExv3T.jpg', 'Calf Machine Image');
 insert into assistance_media (equipment_id, photo_link, photo_name) values ((select equipment_id from equipment where name = 'Peck Deck Machine'), 'https://i.imgur.com/dNFQ7RL.jpg', 'Peck Deck Machine Image');
+
+
 COMMIT;
