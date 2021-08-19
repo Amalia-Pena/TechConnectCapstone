@@ -1,7 +1,7 @@
-BEGIN;
+BEGIN TRANSACTION;
 
 -- CREATE statements go here
-DROP TABLE IF EXISTS app_user,person, employee, exercise_class, class_members, equipment, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
+DROP TABLE IF EXISTS app_user,person, employee, exercise_class, class_members, equipment, equipment_categories, assistance_media, workout_profile, gym_session, equipment_usage, session_equipment, goal, person_goals;
 CREATE TABLE app_user
 (
     user_id    SERIAL PRIMARY KEY,
