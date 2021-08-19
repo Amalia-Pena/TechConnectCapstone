@@ -125,7 +125,6 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
     public List<Workout_Metric> getVisitMetricsDefaultYear(Long user_id, LocalDate startDate, LocalDate endDate) {
         try {
             List<Workout_Metric> output = new ArrayList<>();
-            int currentDay = 1;
             for (int i = 1; i <= 12; i++) {
                 String sql = "SELECT extract(epoch from(SUM(check_out - check_in)))/60 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
                 Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate.plusMonths(1));

@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 public class Exercise_Class {
@@ -8,8 +9,8 @@ public class Exercise_Class {
     private Long instructor_id;
     private String class_name;
     private String class_description;
-    private LocalDate class_start_date;
-    private LocalDate class_end_date;
+    private Timestamp class_start_date;
+    private Timestamp class_end_date;
     private String class_color;
 
     // Getters
@@ -30,11 +31,11 @@ public class Exercise_Class {
         return class_description;
     }
 
-    public LocalDate getClass_start_date() {
+    public Timestamp getClass_start_date() {
         return class_start_date;
     }
 
-    public LocalDate getClass_end_date() {
+    public Timestamp getClass_end_date() {
         return class_end_date;
     }
 
@@ -56,11 +57,11 @@ public class Exercise_Class {
         this.class_description = class_description;
     }
 
-    public void setClass_start_date(LocalDate class_start_date) {
+    public void setClass_start_date(Timestamp class_start_date) {
         this.class_start_date = class_start_date;
     }
 
-    public void setClass_end_date(LocalDate class_end_date) {
+    public void setClass_end_date(Timestamp class_end_date) {
         this.class_end_date = class_end_date;
     }
 

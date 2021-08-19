@@ -132,7 +132,7 @@
                     axisX: {},
                     data: [{
                         type: "column",
-                        yValueFormatString: "#,##0.00#\"\"",
+                        yValueFormatString: "###,##0.00#\"\"",
                         dataPoints: defaultYearDataPoints
                     }]
                 });
@@ -165,7 +165,5 @@
 <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
 <script src="${pageContext.request.contextPath}/javascript/canvasjs.min.js"></script>
 </body>
-<div class="contents">
-    <button onclick="setEvents();">Set Events</button>
-</div>
+
 <%@ include file="common/footer.jspf" %>

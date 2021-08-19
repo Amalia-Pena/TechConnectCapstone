@@ -17,7 +17,7 @@
     var calendarInstance = new calendarJs("myCalendar", {
         exportEventsEnabled: true,
         manualEditingEnabled: true,
-        showTimesInMainCalendarEvents: false,
+        showTimesInMainCalendarEvents: true,
         minimumDayHeight: 0,
         manualEditingEnabled: true,
         visibleDays: [0, 1, 2, 3, 4, 5, 6]

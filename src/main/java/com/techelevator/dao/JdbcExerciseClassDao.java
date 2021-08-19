@@ -43,8 +43,8 @@ public class JdbcExerciseClassDao implements ExerciseClassDao{
                 exercise_class.setInstructor_id(resultSet.getLong("instructor_id"));
                 exercise_class.setClass_name(resultSet.getString("class_name"));
                 exercise_class.setClass_description(resultSet.getString("class_description"));
-                exercise_class.setClass_start_date(resultSet.getDate("class_start_date").toLocalDate());
-                exercise_class.setClass_end_date(resultSet.getDate("class_end_date").toLocalDate());
+                exercise_class.setClass_start_date(resultSet.getTimestamp("class_start_date"));
+                exercise_class.setClass_end_date(resultSet.getTimestamp("class_end_date"));
                 exercise_class.setClass_color(resultSet.getString("class_color"));
 
 
