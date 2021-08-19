@@ -58,7 +58,7 @@
         data: [{
           type: "pie",
           startAngle: 240,
-          yValueFormatString: "##0.00\"%\"",
+          yValueFormatString: "##0.00\"\"",
           indexLabel: "{label} {y}",
           dataPoints: [
             <c:forEach items="${getAllEquipmentMetricForEmployee}" var="equipment_metric">
