@@ -58,6 +58,18 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
     }
 
     @Override
+    public Workout_Metric getVisitMetricDefaultDay(Long user_id, LocalDate startDate) {
+        try {
+            String sql = "SELECT extract(epoch from(SUM(check_out - check_in)))/60 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
+            Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate);
+            newWorkout.setDay(startDate.getDayOfWeek());
+            return newWorkout;
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<Workout_Metric> getVisitMetricsDefaultWeek(Long user_id) {
         try {
             List<Workout_Metric> output = new ArrayList<>();
@@ -98,9 +110,29 @@ public class JdbcWorkoutMetricDao implements WorkoutMetricDao {
                 Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate);
                 newWorkout.setDay(startDate.getDayOfWeek());
                 newWorkout.setDayOfMonth(startDate.getDayOfMonth());
-                System.out.println(newWorkout.getTotalGymTime() + ":" + newWorkout.getDayOfMonth());
                 output.add(newWorkout);
                 startDate = startDate.plusDays(1);
+            }
+
+            return output;
+
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Workout_Metric> getVisitMetricsDefaultYear(Long user_id, LocalDate startDate, LocalDate endDate) {
+        try {
+            List<Workout_Metric> output = new ArrayList<>();
+            int currentDay = 1;
+            for (int i = 1; i <= 12; i++) {
+                String sql = "SELECT extract(epoch from(SUM(check_out - check_in)))/60 AS total_gym_time FROM gym_session JOIN app_user ON gym_session.user_id = app_user.user_id WHERE app_user.user_id = ? AND DATE(check_in) >= DATE(?) AND DATE(check_in) <= DATE(?);";
+                Workout_Metric newWorkout = (Workout_Metric) jdbcTemplate.queryForObject(sql, new GymSessionTotalMetricRowMapper(), user_id, startDate, startDate.plusMonths(1));
+                newWorkout.setMonth(startDate.getMonth().toString());
+                output.add(newWorkout);
+                System.out.println(newWorkout.getMonth() + ":" + newWorkout.getTotalGymTime());
+                startDate = startDate.plusMonths(1);
             }
 
             return output;

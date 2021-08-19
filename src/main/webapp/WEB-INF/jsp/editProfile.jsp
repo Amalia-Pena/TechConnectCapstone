@@ -35,30 +35,30 @@
                         <div class="form-wrapper">
                             <label for="firstName">First Name</label>
                             <form:input class="form-control" path="firstName" value="${user.firstName}"/>
-                            <form:errors path="firstName" cssClass="bg-danger"/>
+                            <form:errors path="firstName" cssClass="text-danger"/>
                         </div>
                         <div class="form-wrapper">
                             <label for="lastName">Last Name</label>
                             <form:input class="form-control" path="lastName" value="${user.lastName}"/>
-                            <form:errors path="lastName" cssClass="bg-danger"/>
+                            <form:errors path="lastName" cssClass="text-danger"/>
                         </div>
                     </div>
                         <div class="form-wrapper">
                             <label for="email">Email</label>
                             <form:input class="form-control" path="email" value="${user.email}"/>
-                            <form:errors path="email" cssClass="bg-danger"/>
+                            <form:errors path="email" cssClass="text-danger"/>
                         </div>
                         <div class="form-group">
                             <div class="form-wrapper">
                                 <label for="height">Height (inches)</label>
                                 <form:input type="number" step=".01" min="0" max="120" class="form-control" path="height"
                                             value="${user.height}"/>
-                                <form:errors path="height" cssClass="bg-danger"/>
+                                <form:errors path="height" cssClass="text-danger"/>
                             </div>
                             <div class="form-wrapper">
                                 <label for="weight">Weight (lbs)</label>
                                 <form:input type="number" step=".01" min="0" class="form-control" path="weight" value="${user.weight}"/>
-                                <form:errors path="weight" cssClass="bg-danger"/>
+                                <form:errors path="weight" cssClass="text-danger"/>
                             </div>
                             </div>
                             <div class="form-wrapper">

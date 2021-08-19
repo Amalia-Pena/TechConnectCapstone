@@ -4,7 +4,7 @@
 
 <c:url var="workoutMetricUrl" value="/gymMemberWorkoutMetrics"/>
 
-
+<link href="<c:url value="/css/memberWorkoutEquipmentMetric.css"/>" rel="stylesheet" type="text/css" />
 <c:if test="${not empty gymSessionEquipmentUsageMapStrength}">
 
 
@@ -33,6 +33,9 @@
         </tbody>
     </table>
 </c:if>
+
+<br>
+<br>
 
 <%--
 <c:if test="${not empty gymSessionEquipmentUsageMapCardio}">
