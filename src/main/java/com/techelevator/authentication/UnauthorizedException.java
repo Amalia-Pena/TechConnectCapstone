@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * UnauthorizedException
  */
-//fgsa
+
 @ResponseStatus(code = HttpStatus.FORBIDDEN)
 public class UnauthorizedException extends Exception {
 
