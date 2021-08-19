@@ -139,6 +139,11 @@ public class JdbcUserDao implements UserDao {
         jdbcTemplate.update(sqlUpdateUser, firstName, lastName, email, height, weight, photoPath, description, userId);
     }
 
+    @Override
+    public void changeUserRole(Long user_id, String role) {
+        String sql = "UPDATE app_user SET role = ? WHERE user_id = ?;";
+        jdbcTemplate.update(sql, role, user_id);
+    }
 
     class UserRowMapper implements RowMapper<User> {
         @Override
