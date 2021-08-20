@@ -59,8 +59,33 @@ public class JdbcSessionDao implements SessionDao {
     }
 
     @Override
+    public List<Gym_Session> getGymSessionsByMonth(Long user_id, String yearValue, String monthValue) {
+        String sql = "SELECT * FROM gym_session WHERE user_id = ? AND EXTRACT(YEAR FROM check_in) = ? AND EXTRACT(MONTH FROM check_in) = ?;";
+        return (List<Gym_Session>) jdbcTemplate.query(sql, new GymSessionRowMapper(), user_id, Integer.parseInt(yearValue), Integer.parseInt(monthValue));
+    }
+
+    @Override
+    public List<Gym_Session> getGymSessionsByMonthDay(Long user_id, String yearValue, String monthValue, String dayValue) {
+        String sql = "SELECT * FROM gym_session WHERE user_id = ? AND EXTRACT(YEAR FROM check_in) = ? AND EXTRACT(MONTH FROM check_in) = ? AND EXTRACT(DAY FROM check_in) = ?;";
+        return (List<Gym_Session>) jdbcTemplate.query(sql, new GymSessionRowMapper(), user_id, Integer.parseInt(yearValue), Integer.parseInt(monthValue), Integer.parseInt(dayValue));
+    }
+
+    @Override
+    public Long getSessionByDay(Long user_id, String yearValue, String monthValue, String dayValue) {
+        String sql = "SELECT * FROM gym_session WHERE user_id = ? AND EXTRACT(YEAR FROM check_in) = ? AND EXTRACT(MONTH FROM check_in) = ? AND EXTRACT(DAY FROM check_in) = ?;";
+        return ((Gym_Session) jdbcTemplate.queryForObject(sql, new GymSessionRowMapper(), user_id, Integer.parseInt(yearValue), Integer.parseInt(monthValue), Integer.parseInt(dayValue))).getSession_id();
+
+    }
+
+    @Override
     public void resetGymSession() {
         gymSession = new Gym_Session();
+    }
+
+    @Override
+    public void createGymSession(Long user_id, Timestamp check_in, Timestamp check_out) {
+        String sql = "INSERT INTO gym_session (user_id, check_in, check_out) VALUES (?,?,?);";
+        jdbcTemplate.update(sql, user_id, check_in, check_out);
     }
 
     private class GymSessionRowMapper implements RowMapper {

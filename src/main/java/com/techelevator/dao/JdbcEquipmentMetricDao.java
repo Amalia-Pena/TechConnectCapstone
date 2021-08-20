@@ -23,7 +23,7 @@ public class JdbcEquipmentMetricDao implements EquipmentMetricDao{
     @Override
     public List<Equipment_Metric> getAllEquipmentMetricForEmployee(double check_in, double check_out) {
         List<Equipment_Metric> matchingEquipmentMetricForEmployee = new ArrayList<>();
-        String sql = "select equipment.name, extract(epoch from sum(check_out - equipment_usage.check_in))/86400 as equipment_usage from equipment_usage join equipment on equipment.equipment_id = equipment_usage.equipment_id where extract(month from check_in) = ? and  extract(month from check_out) = ? group by equipment.name order by equipment_usage desc;";
+        String sql = "select equipment.name, extract(epoch from sum(check_out - equipment_usage.check_in))/60 as equipment_usage from equipment_usage join equipment on equipment.equipment_id = equipment_usage.equipment_id where extract(month from check_in) >= ? and  extract(month from check_out) <= ? group by equipment.name order by equipment_usage desc;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, check_in, check_out);
         while(results.next()){
             matchingEquipmentMetricForEmployee.add(mapRowToEquipmentMetric(results));

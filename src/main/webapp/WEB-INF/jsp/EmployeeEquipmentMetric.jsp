@@ -38,7 +38,7 @@
     <option value = 12> December</option>
   </select>
 
-  <input type = "submit"/>
+    <input type="submit"/>
 </form>
 </div>
 <br> <br>
@@ -47,33 +47,39 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <script>
-    window.onload = function() {
+    <c:if test="${employeeEquipmentMetricStartMonth != null}">
 
-      var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-        title: {
-          text: "Equipment Metrics"
-        },
-        data: [{
-          type: "pie",
-          startAngle: 240,
-          yValueFormatString: "##0.00\"\"",
-          indexLabel: "{label} {y}",
-          dataPoints: [
-            <c:forEach items="${getAllEquipmentMetricForEmployee}" var="equipment_metric">
 
-            { label: "${equipment_metric.name}",
-              y: parseFloat("${equipment_metric.equipmentUsage }")},
+        <script>
+            window.onload = function () {
 
-            </c:forEach>
-          ]
-        }]
-      });
-      chart.render();
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    title: {
+                        text: "${employeeEquipmentMetricStartMonth} to ${employeeEquipmentMetricEndMonth} Equipment Metrics"
+                    },
+                    data: [{
+                        type: "pie",
+                        startAngle: 240,
+                        yValueFormatString: "##0.00\"\"",
+                        indexLabel: "{label} {y}",
+                        dataPoints: [
+                            <c:forEach items="${getAllEquipmentMetricForEmployee}" var="equipment_metric">
 
-    }
-  </script>
+                            {
+                                label: "${equipment_metric.name}",
+                                y: parseFloat("${equipment_metric.equipmentUsage }")
+                            },
+
+                            </c:forEach>
+                        ]
+                    }]
+                });
+                chart.render();
+
+            }
+        </script>
+    </c:if>
 </head>
 <body>
 <div id="chartContainer" style="height: 370px; width: 100%;"></div>
@@ -82,11 +88,11 @@
 </html>
 
 <table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Number of days used</th>
-  </tr>
-  <c:forEach items="${getAllEquipmentMetricForEmployee}" var="equipment_metric">
+    <tr>
+        <th>Equipment Name</th>
+        <th>Number of minutes used</th>
+    </tr>
+    <c:forEach items="${getAllEquipmentMetricForEmployee}" var="equipment_metric">
     <tr>
       <td>${equipment_metric.name} </td>
       <td>${equipment_metric.equipmentUsage }</td>

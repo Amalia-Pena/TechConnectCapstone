@@ -8,6 +8,8 @@ public class Workout_Metric {
     private DayOfWeek day;
     private int dayOfMonth;
     private String month;
+    private int monthValue;
+    private int yearValue;
 
     public String getTotalGymTime() {
         return totalGymTime;
@@ -47,5 +49,21 @@ public class Workout_Metric {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public int getMonthValue() {
+        return monthValue;
+    }
+
+    public void setMonthValue(int monthValue) {
+        this.monthValue = monthValue;
+    }
+
+    public int getYearValue() {
+        return yearValue;
+    }
+
+    public void setYearValue(int yearValue) {
+        this.yearValue = yearValue;
     }
 }

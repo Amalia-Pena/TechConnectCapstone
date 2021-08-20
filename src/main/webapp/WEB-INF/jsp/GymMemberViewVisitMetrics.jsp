@@ -42,10 +42,12 @@
                     axisX: {},
                     data: [{
                         type: "column",
+                        click: onClick,
                         yValueFormatString: "#,##0.00#\"\"",
                         dataPoints: [{
                             label: "${defaultDayMetric.day}",
-                            y: parseFloat("${defaultDayMetric.totalGymTime}")
+                            y: parseFloat("${defaultDayMetric.totalGymTime}"),
+                            link: "${pageContext.request.contextPath}/gymSessionEquipmentMetrics?yearValue=${defaultDayMetric.yearValue}&monthValue=${defaultDayMetric.monthValue}&dayValue=${defaultDayMetric.dayOfMonth}"
                         }]
                     }]
                 });
@@ -65,17 +67,22 @@
                     axisX: {},
                     data: [{
                         type: "column",
+                        click: onClick,
                         yValueFormatString: "#,##0.00#\"\"",
                         dataPoints: defualtWeekDataPoints
-            }]
-        });
+                    }]
+                });
 
 
-        function generateWeekDataPoints() {
-            var arr = [];
-            <c:forEach var="day" items="${defaultWeekMetric}">
-            arr.push({label: "${day.day}", y: parseFloat("${day.totalGymTime}")});
-            </c:forEach>
+                function generateWeekDataPoints() {
+                    var arr = [];
+                    <c:forEach var="day" items="${defaultWeekMetric}">
+                    arr.push({
+                        label: "${day.day}",
+                        y: parseFloat("${day.totalGymTime}"),
+                        link: "${pageContext.request.contextPath}/gymSessionEquipmentMetrics?yearValue=${day.yearValue}&monthValue=${day.monthValue}&dayValue=${day.dayOfMonth}"
+                    });
+                    </c:forEach>
             return arr;
         }
 
@@ -111,7 +118,7 @@
                     arr.push({
                         label: "${day.dayOfMonth}",
                         y: parseFloat("${day.totalGymTime}"),
-                        link: "http://www.google.com"
+                        link: "${pageContext.request.contextPath}/gymMemberWorkoutMetrics?yearValue=${day.yearValue}&monthValue=${day.monthValue}&dayValue=${day.dayOfMonth}"
                     });
                     </c:forEach>
                     return arr;
@@ -132,6 +139,7 @@
                     axisX: {},
                     data: [{
                         type: "column",
+                        click: onClick,
                         yValueFormatString: "###,##0.00#\"\"",
                         dataPoints: defaultYearDataPoints
                     }]
@@ -141,15 +149,42 @@
                 function generateYearDataPoints() {
                     var arr = [];
                     <c:forEach var="month" items="${defaultYearMetric}">
-                    arr.push({label: "${month.month}", y: parseFloat("${month.totalGymTime}")});
+                    arr.push({
+                        label: "${month.month}",
+                        y: parseFloat("${month.totalGymTime}"),
+                        link: "${pageContext.request.contextPath}/gymMemberWorkoutMetrics?yearValue=${month.yearValue}&monthValue=${month.monthValue}"
+                    });
                     </c:forEach>
                     return arr;
                 }
+
+                var chart4 = new CanvasJS.Chart("chartContainer4", {
+                    animationEnabled: true,
+                    theme: "dark2",
+                    title: {
+                        text: "Year: " + "${defaultYearStart}" + " to " + "${defaultYearEnd}" + " Metrics"
+                    },
+                    axisX: {},
+                    axisY: {
+                        title: "Gym Session Time (Minutes)",
+                        scaleBreaks: {
+                            autoCalculate: true
+                        }
+                    },
+                    data: [{
+                        type: "line",
+                        xValueFormatString: "DD MMM",
+                        click: onClick,
+                        color: "#F08080",
+                        dataPoints: defaultYearDataPoints
+                    }]
+                });
 
                 chart.render();
                 chart1.render();
                 chart2.render();
                 chart3.render();
+                chart4.render()
             }
         </script>
     </div>
@@ -163,6 +198,8 @@
 <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
 <p></p>
 <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+<p></p>
+<div id="chartContainer4" style="height: 300px; width: 100%;"></div>
 <script src="${pageContext.request.contextPath}/javascript/canvasjs.min.js"></script>
 </body>
 

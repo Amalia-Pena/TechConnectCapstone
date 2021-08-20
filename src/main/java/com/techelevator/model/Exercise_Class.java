@@ -6,7 +6,6 @@ import java.time.LocalDate;
 public class Exercise_Class {
     // Instance variables
     private Long class_id;
-    private Long instructor_id;
     private String class_name;
     private String class_description;
     private Timestamp class_start_date;
@@ -17,10 +16,6 @@ public class Exercise_Class {
 
     public Long getClass_id() {
         return class_id;
-    }
-
-    public Long getInstructor_id() {
-        return instructor_id;
     }
 
     public String getClass_name() {
@@ -43,10 +38,6 @@ public class Exercise_Class {
 
     public void setClass_id(Long class_id) {
         this.class_id = class_id;
-    }
-
-    public void setInstructor_id(Long instructor_id) {
-        this.instructor_id = instructor_id;
     }
 
     public void setClass_name(String class_name) {

@@ -40,7 +40,6 @@ public class JdbcExerciseClassDao implements ExerciseClassDao{
             try {
                 Exercise_Class exercise_class = new Exercise_Class();
                 exercise_class.setClass_id(resultSet.getLong("class_id"));
-                exercise_class.setInstructor_id(resultSet.getLong("instructor_id"));
                 exercise_class.setClass_name(resultSet.getString("class_name"));
                 exercise_class.setClass_description(resultSet.getString("class_description"));
                 exercise_class.setClass_start_date(resultSet.getTimestamp("class_start_date"));

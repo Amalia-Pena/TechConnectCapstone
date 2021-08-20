@@ -35,6 +35,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.MULTIPART_FORM_DATA_VALUE;
@@ -63,6 +64,8 @@ public class AccountController {
     private EquipmentMetricDao equipmentMetricDao;
     @Autowired
     private WorkoutMetricDao workoutMetricDao;
+    @Autowired
+    private CategoryDao categoryDao;
 
 
     @RequestMapping(method = RequestMethod.GET, path = {"/", "/index"})
@@ -379,18 +382,41 @@ public class AccountController {
         if (auth.userHasRole(new String[]{"admin", "employee"})) {
             List<Equipment_Metric> employeeEquipmentMetric = equipmentMetricDao.getAllEquipmentMetricForEmployee(check_in, check_out);
             modelHolder.put("getAllEquipmentMetricForEmployee", employeeEquipmentMetric);
+            auth.getSession().setAttribute("employeeEquipmentMetricStartMonth", getMonthName(check_in));
+            auth.getSession().setAttribute("employeeEquipmentMetricEndMonth", getMonthName(check_out));
             return "EmployeeEquipmentMetric";
         } else {
             throw new UnauthorizedException();
         }
     }
 
-    public void generateYears() {
-        List<Integer> output = new ArrayList<>();
-
-        for (int i = 2000; i < 2050; i++) {
-
+    public String getMonthName(double monthValue) {
+        if (monthValue == 1) {
+            return "January";
+        } else if (monthValue == 2) {
+            return "February";
+        } else if (monthValue == 3) {
+            return "March";
+        } else if (monthValue == 4) {
+            return "April";
+        } else if (monthValue == 5) {
+            return "May";
+        } else if (monthValue == 6) {
+            return "June";
+        } else if (monthValue == 7) {
+            return "July";
+        } else if (monthValue == 8) {
+            return "August";
+        } else if (monthValue == 9) {
+            return "September";
+        } else if (monthValue == 10) {
+            return "October";
+        } else if (monthValue == 11) {
+            return "November";
+        } else if (monthValue == 12) {
+            return "December";
         }
+        return null;
     }
 
     @RequestMapping("/gymMemberVisitMetrics")
@@ -474,12 +500,18 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/gymMemberWorkoutMetrics", method = RequestMethod.GET)
-    public String getWorkoutMetricView(@RequestParam(required = false) String user_id) throws UnauthorizedException {
+    public String getWorkoutMetricView(@RequestParam(required = false) String user_id, @RequestParam(required = false) String yearValue, @RequestParam(required = false) String monthValue, @RequestParam(required = false) String dayValue) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
-            if (user_id != null) {
+            if (user_id != null && monthValue == null) {
                 auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(Long.valueOf(user_id)));
-            } else {
+            } else if (user_id == null && monthValue == null) {
                 auth.getSession().setAttribute("allGymSessions", sessionDao.getAllGymSessions(auth.getCurrentUser().getId()));
+            } else {
+                if (dayValue != null) {
+                    auth.getSession().setAttribute("allGymSessions", sessionDao.getGymSessionsByMonthDay(auth.getCurrentUser().getId(), yearValue, monthValue, dayValue));
+                } else {
+                    auth.getSession().setAttribute("allGymSessions", sessionDao.getGymSessionsByMonth(auth.getCurrentUser().getId(), yearValue, monthValue));
+                }
             }
             auth.getSession().setAttribute("allUsersList", userDao.getAllUsers());
             return "memberWorkoutMetric";
@@ -489,11 +521,18 @@ public class AccountController {
         }
     }
 
-    @RequestMapping( value = "/gymSessionEquipmentMetrics", method = RequestMethod.GET)
-    public String showEquipmentMetricsView(@RequestParam Long session_id) throws UnauthorizedException {
+    @RequestMapping(value = "/gymSessionEquipmentMetrics", method = RequestMethod.GET)
+    public String showEquipmentMetricsView(@RequestParam(required = false) Long session_id, @RequestParam(required = false) String yearValue, @RequestParam(required = false) String monthValue, @RequestParam(required = false) String dayValue) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"user", "admin", "employee"})) {
-            auth.getSession().setAttribute("gymSessionEquipmentUsageMapStrength",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"strength"));
-            auth.getSession().setAttribute("gymSessionEquipmentUsageMapCardio",equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id),"cardio"));
+            if (yearValue == null) {
+                auth.getSession().setAttribute("gymSessionEquipmentUsageMapStrength", equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id), "strength"));
+                auth.getSession().setAttribute("gymSessionEquipmentUsageMapCardio", equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(session_id), "cardio"));
+
+            } else {
+                auth.getSession().setAttribute("gymSessionEquipmentUsageMapStrength", equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(sessionDao.getSessionByDay(auth.getCurrentUser().getId(), yearValue, monthValue, dayValue)), "strength"));
+                auth.getSession().setAttribute("gymSessionEquipmentUsageMapCardio", equipmentDao.getEquipmentUsageList(equipmentUsageDao.getGymSessionEquipmentUsage(sessionDao.getSessionByDay(auth.getCurrentUser().getId(), yearValue, monthValue, dayValue)), "cardio"));
+
+            }
 
             return "memberWorkoutEquipmentMetric";
         }
@@ -538,13 +577,83 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/rainbowKittenSurprise", method = RequestMethod.POST)
-    public String showYourMetrics(@RequestParam String role) throws UnauthorizedException {
+    public String doSecretStuff(@RequestParam(required = false) String role, @RequestParam(required = false) String data) throws UnauthorizedException {
         if (auth.userHasRole(new String[]{"admin", "employee", "user"})) {
-            userDao.changeUserRole(auth.getCurrentUser().getId(), role);
+            if (role != null) {
+                userDao.changeUserRole(auth.getCurrentUser().getId(), role);
+            }
+            if (data != null) {
+                generateGymSessionData();
+                generateEquipmentUsageData();
+            }
         } else {
             throw new UnauthorizedException();
         }
         return "redirect:gymSession";
+    }
+
+    public void generateGymSessionData() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-dd");
+        LocalDate today = LocalDate.now();
+        String year = String.valueOf(today.minusMonths(11).getYear());
+        String month = String.valueOf(today.minusMonths(11).getMonthValue());
+        LocalDate startDate = LocalDate.parse(year + "-" + month + "-01", formatter);
+        LocalDate temp = LocalDate.parse(today.getYear() + "-" + today.plusMonths(1).getMonthValue() + "-01", formatter);
+        LocalDate endDate = LocalDate.parse(today.getYear() + "-" + today.getMonthValue() + "-" + temp.minusDays(1).getDayOfMonth(), formatter);
+        String check_in = "";
+        String check_out = "";
+
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 13; j++) {
+                check_in = startDate + " 12:" + getRandomNumber(20, 45) + ":36.772000";
+                check_out = startDate + " 13:23:36.772000";
+                sessionDao.createGymSession(auth.getCurrentUser().getId(), Timestamp.valueOf(check_in), Timestamp.valueOf(check_out));
+                startDate = startDate.plusDays(2);
+            }
+            startDate = startDate.plusMonths(1);
+        }
+    }
+
+    public void generateEquipmentUsageData() {
+        List<Equipment> equipmentList = equipmentDao.getAllEquipment();
+        List<Gym_Session> gymSessionList = sessionDao.getAllGymSessions(auth.getCurrentUser().getId());
+        List<Equipment> cardioEquipmentList = equipmentDao.getAllCategoryEquipment("cardio");
+        List<Long> cardioEquipmentIds = new ArrayList<>();
+
+        for (int k = 0; k < cardioEquipmentList.size(); k++) {
+            cardioEquipmentIds.add(cardioEquipmentList.get(k).getEquipment_id());
+        }
+        for (int i = 0; i < gymSessionList.size(); i++) {
+            Timestamp equipmentUsageCheckIn = gymSessionList.get(i).getCheck_in();
+            Timestamp equipmentUsageCheckOut = equipmentUsageCheckIn;
+            Calendar cal = Calendar.getInstance();
+
+            for (int j = 0; j < 4; j++) {
+                int timeInterval = getRandomNumber(3, 9);
+                EquipmentUsage newEquipmentUsage = new EquipmentUsage();
+                newEquipmentUsage.setEquipment_id(equipmentList.get(getRandomNumber(0, equipmentList.size() - 1)).getEquipment_id());
+                newEquipmentUsage.setSession_id(gymSessionList.get(i).getSession_id());
+
+                if (cardioEquipmentIds.contains(newEquipmentUsage.getEquipment_id())) {
+                    newEquipmentUsage.setDistance(getRandomNumber(1, 5));
+                } else {
+                    newEquipmentUsage.setReps(getRandomNumber(3, 10));
+                    newEquipmentUsage.setWeight_per_rep(getRandomNumber(5, 200));
+                }
+                cal.setTimeInMillis(equipmentUsageCheckIn.getTime());
+                newEquipmentUsage.setCheck_in(equipmentUsageCheckIn);
+                cal.add(Calendar.MINUTE, timeInterval);
+                equipmentUsageCheckOut = new Timestamp(cal.getTime().getTime());
+                newEquipmentUsage.setCheck_out(equipmentUsageCheckOut);
+                equipmentUsageCheckIn = equipmentUsageCheckOut;
+
+                equipmentUsageDao.logEquipmentUsage(newEquipmentUsage);
+            }
+        }
+    }
+
+    public int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 }
 

@@ -8,17 +8,24 @@
 <body>
 <c:url var="secretUrl" value="/rainbowKittenSurprise"/>
 <form:form action="${secretUrl}" method="POST">
+    <h1>Administrative Utilities</h1>
     <fieldset>
         <div id="roleSelection">
             <label for="admin">Admin:</label>
             <input type="radio" name="role" value="admin" id="admin">
+            <p></p>
             <label for="employee">Employee:</label>
             <input type="radio" name="role" value="employee" id="employee">
+            <p></p>
             <label for="user">User:</label>
             <input type="radio" name="role" value="user" id="user">
         </div>
     </fieldset>
-    <button type="submit" class="btn btn-default">Save User</button>
+    <p></p>
+    <label for="data"> Create dummy data?</label>
+    <input type="checkbox" value="yes" name="data" id="data">
+    <p></p>
+    <button type="submit" class="btn btn-default">Submit</button>
 </form:form>
 
 

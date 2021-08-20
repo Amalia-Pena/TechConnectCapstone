@@ -38,7 +38,6 @@ public class JdbcEquipmentUsageDao implements EquipmentUsageDao {
         }
     }
 
-
     private class EquipmentRowMapper implements RowMapper {
         @Override
         public EquipmentUsage mapRow(ResultSet results, int i) {

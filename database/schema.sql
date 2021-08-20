@@ -21,14 +21,12 @@ CREATE TABLE app_user
 CREATE TABLE exercise_class
 (
     class_id          SERIAL UNIQUE,
-    instructor_id     int NOT NULL,
     class_name        varchar(255),
     class_description varchar(500),
     class_start_date  TIMESTAMP,
     class_end_date    TIMESTAMP,
     class_color       varchar(45),
-    PRIMARY KEY (class_id),
-    FOREIGN KEY (instructor_id) REFERENCES app_user (user_id)
+    PRIMARY KEY (class_id)
 );
 
 CREATE TABLE class_members
