@@ -154,7 +154,7 @@ public class AccountController {
             return "redirect:/createEmployee";
         }
         auth.register(user.getUsername(), user.getPassword(), user.getRole(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhotoPath(), user.getHeight(), user.getWeight(), user.getDescription());
-        return "redirect:/";
+        return "redirect:/gymSession";
     }
 
     @RequestMapping(path = "/profile", method = RequestMethod.GET)
