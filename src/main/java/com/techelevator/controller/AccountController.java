@@ -420,7 +420,7 @@ public class AccountController {
     }
 
     @RequestMapping("/gymMemberVisitMetrics")
-    public String getVisitMetricSelectionPage(@RequestParam(required = false) String user_id, @RequestParam(required = false) String start_date, @RequestParam(required = false) String end_date, ModelMap map) {
+    public String getVisitMetricSelectionPage(@RequestParam(required = false) String user_id, @RequestParam(required = false) String start_date, @RequestParam(required = false) String end_date, @RequestParam(required = false) String viewSelection, ModelMap map) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         map.put("allTimeMetric", workoutMetricDao.getMemberTotalGymTime(auth.getCurrentUser().getId()).getTotalGymTime());
         if (start_date != null && end_date != null) {
@@ -448,6 +448,7 @@ public class AccountController {
         auth.getSession().setAttribute("defaultMonthMetric", workoutMetricDao.getVisitMetricsDefaultMonth(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultMonthStart"), (LocalDate) auth.getSession().getAttribute("defaultMonthEnd")));
         auth.getSession().setAttribute("defaultYearMetric", workoutMetricDao.getVisitMetricsDefaultYear(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultYearStart"), (LocalDate) auth.getSession().getAttribute("defaultYearEnd")));
         auth.getSession().setAttribute("defaultDayMetric", workoutMetricDao.getVisitMetricDefaultDay(auth.getCurrentUser().getId(), (LocalDate) auth.getSession().getAttribute("defaultDayStart")));
+
         return "GymMemberViewVisitMetrics";
     }
 

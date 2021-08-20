@@ -21,10 +21,10 @@
     </div>
     </section>
 
-
     <br> <br>
 
     <div id="date">
+
         <script>
             window.onload = function () {
 
@@ -58,7 +58,7 @@
                     animationEnabled: true,
                     theme: "dark2", // "light1", "light2", "dark1", "dark2"
                     title: {
-                        text: "Week: " + "${defaultWeekStart}" + "-" + "${defaultWeekEnd}" + " Metrics"
+                        text: "Week: " + "${defaultWeekStart}" + " to " + "${defaultWeekEnd}" + " Metrics"
                     },
                     axisY: {
                         title: "Gym Session Time (Minutes)"
